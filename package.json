@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/tidic84/gameguessr/issues"
   },
-  "homepage": "https://github.com/tidic84/gameguessr#readme"
+  "homepage": "https://github.com/tidic84/gameguessr#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "uuid": "^10.0.0"
+  }
 }
