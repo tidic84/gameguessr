@@ -52,64 +52,88 @@
         </style>
     </head>
     <body>
-        <div>
+        <div id="content">
             <h1>Welcome to GameGuessr</h1>
-            <form id="roomForm">
-                <input type="text" id="username" placeholder="Enter your username">
-                <select id="mode">
-                    <option value="classic" selected>Classic</option>
-                    <option value="solo">Solo</option>
-                    <option value="team">Team</option>
-                </select>
-                <select id="difficulty">
-                    <option value="easy">Easy</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
-                <select id="duration">
-                    <option value="quick">Quick</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="long">Long</option>
-                </select>
-                <select id="privacy">
-                    <option value="public">Public</option>
-                    <option value="private" selected>Private</option>
-                    <option value="password">Password</option>
-                </select>
-                <input type="password" id="roomPassword" placeholder="Enter room password" disabled>
-                <button type="button" onclick="createRoom()">Create Room</button>
-                <button type="button" onclick="joinRoom()">Join Room</button>
-            </form>
+            <input type="text" id="username" placeholder="Enter your username">
+            <button onclick="createRoom()">Create Room</button>
+            <!-- <input type="text" id="roomCode" placeholder="Enter room code"> -->
+            <button onclick="joinRoom()">Join Room</button>
         </div>
-        
-        <script>
-                const privacy = document.getElementById('privacy');
-                privacy.addEventListener('change', () => {
-                    const passwordInput = document.getElementById('roomPassword');
 
-                    if (privacy.value === 'password') {
-                        passwordInput.disabled = false;
-                    } else {
-                        passwordInput.disabled = true;
-                    }
-                });
+        <script>
+            function generateCode(length) {
+                let result = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                for (let i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return result;
+            }
         </script>
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
             const socket = io();
-            async function createRoom() {
+            let username = '';
+
+            let cookie = document.cookie;
+            if (!cookie.includes('userId')) {
+                console.log("Nouvel utilisateur");
+                socket.emit('uuid');
+                socket.on('uuid', (uuid) => {
+                    document.cookie = 'userId=' + uuid + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+                });
+            } else {
+                console.log("Utilisateur déjà existant");
+            }
+
+            function createRoom() {
+                // Récupérer le pseudo de l'utilisateur
+                username = document.getElementById('username').value;
+
+                if (!username) {
+                    alert('Please enter a username');
+                    return;
+                }
+                // Changer le contenu de la page
+                document.getElementById('content').innerHTML = `
+                    <h1>Create Room</h1>
+                    <form id="roomForm">
+                        <select id="mode">
+                            <option value="classic" selected>Classic</option>
+                            <option value="solo">Solo</option>
+                            <option value="team">Team</option>
+                        </select>
+                        <select id="difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                        <select id="duration">
+                            <option value="quick" selected>Quick</option>
+                            <option value="medium">Medium</option>
+                            <option value="long">Long</option>
+                        </select>
+                        <select id="privacy">
+                            <option value="public" selected>Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                        <button type="button" onclick="submitRoomForm()">Create Room</button>
+                    </form>
+                `;
+            }
+
+            function submitRoomForm() {
                 // Récupérer les valeurs du formulaire
-                const username = document.getElementById('username').value;
                 const mode = document.getElementById('mode').value;
                 const difficulty = document.getElementById('difficulty').value;
                 const duration = document.getElementById('duration').value;
                 const privacy = document.getElementById('privacy').value;
-                const password = document.getElementById('roomPassword').value;
 
-                console.log('create room');
                 let users = {};
-                users[self.crypto.randomUUID()] = {
+                const userId = document.cookie.split('=')[1];
+                console.log(userId);
+                users[userId] = {
                     name: 'User',
                     score: 0,
                     role: 'player', // 'player', 'spectator'
@@ -124,13 +148,29 @@
                     difficulty: difficulty,
                     duration: duration,
                     privacy: privacy,
-                    password: password
+                    code: generateCode(6)
                 }
                 socket.emit('room create', room);
+                window.location.href = '/game/' + room.code;
             }
 
             function joinRoom() {
-                socket.emit('room requestJoin');
+                const roomCode = document.getElementById('roomCode').value;
+
+                fetch('/join-room', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ roomCode: roomCode })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/room/' + roomCode;
+                    } else {
+                        alert('Failed to join room: ' + data.error);
+                    }
+                });
             }
         </script>
     </body>

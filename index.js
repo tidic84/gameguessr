@@ -15,6 +15,26 @@ app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'index.html'));
 });
 
+app.get('/js/:file', (req, res) => {
+    if(req.params.file === 'three.min.js' || req.params.file === 'panolens.min.js') {
+        const file = req.params.file;
+        res.sendFile(join(__dirname, 'js', file));
+    }
+});
+
+app.get('/images/:file', (req, res) => {
+    const file = req.params.file;
+    res.sendFile(join(__dirname, 'res/img', file));
+});
+
+app.get('/game/:roomCode', (req, res) => {
+    const roomCode = req.params.roomCode;
+    if (rooms[roomCode]) {
+        res.sendFile(__dirname + '/game.html');
+    } else {
+        res.status(404).send('Room does not exist');
+    }
+});
 /*
 ## TEMPLATE FOR USER CREATION
 {
@@ -30,7 +50,6 @@ app.get('/', (req, res) => {
     difficulty: 'difficulty1', // 'easy', 'medium', 'hard'
     duration: 'quick', // 'quick', 'medium, 'long'
     privacy: 'privacy1', // 'public', 'private', 'password
-    password: 'password1'
 }
 */
 
@@ -38,19 +57,22 @@ io.on('connection', (socket) => {
     console.log('a user connected ' + socket.id);
 
     socket.on('room create', (room) => {
-        rooms[uuidv4()] = {
+        rooms[room.code] = {
             name: room.name,
             users: room.owner,
             mode: room.mode,
             difficulty: room.difficulty,
             duration: room.duration,
-            privacy: room.privacy,
-            password: bcrypt.hashSync(room.password, 10)
+            privacy: room.privacy
         };
     
         console.log('room created');
         console.log(rooms);
 
+    });
+
+    socket.on('uuid', () => {
+        socket.emit('uuid', uuidv4());
     });
     
 });

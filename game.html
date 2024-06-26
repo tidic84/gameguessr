@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Game Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core/index.min.css" /></head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+        <style>
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: space-between;
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+        
+            #gameArea, #chatArea {
+                height: 100%;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        
+            #gameArea {
+                flex: 4;
+                margin-right: 20px;
+                background-color: #c07b7b;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+        
+            #chatArea {
+                flex: 1;
+                background-color: #f4f4f4;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+            }
+
+            .header {
+                position: static;
+                overflow: hidden;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: #e2a3a3;
+                width: 100%;
+                box-sizing: border-box;
+                z-index: 1000;
+            }
+            .header h1 {
+                color: white;
+                text-align: center;
+                margin: 1rem;
+            }
+            .header button {
+                background-color: white;
+                /* color: white; */
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                margin:1rem;
+                cursor: pointer;
+                border: none;
+                border-radius: 4px;
+            }
+            #panorama {
+                height: 100%;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="gameArea">
+            <div class="header">
+                <h1>GameGuessr</h1>
+                <button onclick="window.location.href = '/'">Leave Room</button>
+            </div>
+            <div id="panorama"></div>
+
+        </div>
+        <div id="chatArea">
+        </div>
+
+        <script>
+            pannellum.viewer('panorama', {
+                "type": "equirectangular",
+                "autoLoad": true,
+                "panorama": "../images/img.jpg"
+            });
+        </script>
+        
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
+
+            socket.on('connect', () => {
+                // Join the game room
+                const roomCode = window.location.pathname.split('/')[2];
+                socket.emit('join room', roomCode);
+            });
+
+            socket.on('game update', (gameState) => {
+                // Update the game area with the new game state
+                document.getElementById('gameArea').innerHTML = JSON.stringify(gameState);
+            });
+        </script>
+    </body>
+</html>
