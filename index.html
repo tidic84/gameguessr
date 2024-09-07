@@ -132,9 +132,10 @@
 
                 let users = {};
                 const userId = document.cookie.split('=')[1];
+                socket.emit('user create', userId, username);
                 console.log(userId);
                 users[userId] = {
-                    name: 'User',
+                    name: username,
                     score: 0,
                     role: 'player', // 'player', 'spectator'
                     team: undefined, // 'team1', 'team2'
