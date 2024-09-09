@@ -63,6 +63,7 @@ io.on('connection', (socket) => {
                     if (rooms[room].users[userId]) {
                         delete rooms[room].users[userId];
                         io.emit(`player update ${room}`, rooms[room].users);
+                        io.emit('chat leave', users[userId].name, room);
                     }
                     if(Object.keys(rooms[room].users).length === 0) {
                         setTimeout(function(){
@@ -133,6 +134,7 @@ io.on('connection', (socket) => {
                 status: false
             };
             io.emit(`player update ${roomCode}`, rooms[roomCode].users);
+            io.emit('chat join', users[userId].name, roomCode);
             
         } else {
             console.log('room does not exist');

@@ -19,7 +19,7 @@
                 padding: 20px;
                 box-sizing: border-box;
             }
-        
+            
             #gameArea, #chatArea {
                 height: 100%;
                 width: 100%;
@@ -82,15 +82,16 @@
                 flex-direction: column;
                 /* overflow: hidden; */
             }
-            #chatMessages {
-                margin-bottom: auto;
-                margin-left: 0;
-                padding-left: 20px;
+            #chat {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+                margin-bottom: 5rem;
                 list-style-type: none;
             }
             #typeArea {
-                margin-top: auto;
-                display: flex;
+                bottom: 4rem;
+                position: absolute;
                 justify-content: space-between;
                 align-items: center;
                 padding: 10px;
@@ -100,6 +101,47 @@
             #typeArea:focus {
                 outline: none;
             }
+
+            /*  Tabs chatarea */
+            #tabs {
+                display: flex;
+                justify-content: space-around;
+                background-color: #e2a3a3;
+                padding: 10px;
+            }
+            #tabs button {
+                color:#f4f4f4;
+                background-color: #e2a3a3;
+                font-size: 20px;
+                border: none;
+                cursor: pointer;
+            }
+
+            .tab {
+                display: none;
+            }
+
+            .tab.active {
+                display: block;
+            }
+
+            .content {
+                flex: 1;
+                display: none;
+                padding: 20px;
+                /* background-color: #fff; */
+                /* border-radius: 10px; */
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+            }
+
+            .content.active {
+                display: block;
+            }
+
+            #scoreList {
+                list-style-type: none;
+            }
         </style>
     </head>
     <body>
@@ -108,16 +150,26 @@
                 <h1>GameGuessr</h1>
                 <button onclick="socket.emit('room leave', window.location.pathname.split('/')[2], document.cookie.split('=')[1]);socket.disconnect(); window.location.href = '/'">Leave Room</button>
             </div>
-            <!-- <div id="panorama"></div> -->
-            <div id="playerList">
-                <h2>Players:</h2>
-            <ul id="players"></ul>
-            </div>
+            <div id="panorama"></div>
 
         </div>
         <div id="chatArea">
-            <ul id="chatMessages"></ul>
-            <input id="typeArea" placeholder="Type a message..."></input>
+            <div id="tabs">
+                <button id="tabchat" onclick="showTab('chat')"><i class="tab fa-solid fa-comment"></i></button>
+                <button id="tabscores" onclick="showTab('scores')"><i class="tab fa-solid fa-users"></i></button>
+                <button id="taboptions" onclick="showTab('options')"><i class="tab fa-solid fa-gear"></i></button>
+            </div>
+            <div id="chat" class="content active">
+                <ul id="chatMessages"></ul>
+                <input id="typeArea" placeholder="Type a message..."></input>
+            </div>
+            <div id="scores" class="content">
+                <h2>Scores</h2>
+                <ul id="scoreList"></ul>
+            </div>
+            <div id="options" class="content">
+                <h2>Options</h2>
+            </div>
         </div>
 
         <script>
@@ -129,7 +181,7 @@
                 "panorama": "../images/img.jpg"
             });
         </script>
-        
+        <script src="https://kit.fontawesome.com/c947b5c981.js" crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             
@@ -167,22 +219,35 @@
                 });
 
                 // CHAT
-                const chatMessages = document.getElementById('chatMessages');
+                const chatMessages = document.getElementById('chat');
                 const typeArea = document.getElementById('typeArea');
 
                 typeArea.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
-                        socket.emit('chat message', roomCode, userId, typeArea.value);
+                        if (typeArea.value != "") socket.emit('chat message', roomCode, userId, typeArea.value);
                         typeArea.value = '';
                     }
                 });
 
                 socket.on(`chat message ${roomCode}`, (user, message) => {
+                    var scrollMaxY = window.scrollMaxY || (document.documentElement.scrollHeight - document.documentElement.clientHeight)
+
                     const li = document.createElement('li');
                     li.textContent = user + ": " +message;
                     chatMessages.appendChild(li);
+                    chatMessages.scrollTop = chatMessages.scrollHeight +250;
                 });
-                
+
+                socket.on('chat join', (username, roomCode) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${username} has joined the room</strong>`;
+                    chatMessages.appendChild(li);
+                });
+                socket.on('chat leave', (username, roomCode) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${username} has left the room</strong>`;
+                    chatMessages.appendChild(li);
+                });
             });
 
             socket.on('game update', (gameState) => {
@@ -190,14 +255,31 @@
                 document.getElementById('gameArea').innerHTML = JSON.stringify(gameState);
             });
             
+            function showTab(tabId) {
+                console.log(`TabId: ${tabId}`);
+
+                const tabs = document.querySelectorAll('.tab');
+                const contents = document.querySelectorAll('.content');
+
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                contents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                document.getElementById(`tab${tabId}`).classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            }
 
             function updatePlayerList(players) {
-                var list = document.getElementById('players');
+                var list = document.getElementById('scoreList');
                 list.innerHTML = '';
 
                 for (const player in players) {
                     var li = document.createElement('li');
-                    li.textContent = players[player].name;
+                    li.textContent = players[player].name + ': ' + players[player].points;
                     list.appendChild(li);
                 }
             }

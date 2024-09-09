@@ -95,6 +95,18 @@
                 console.log("Utilisateur déjà existant");
             }
 
+            socket.on('connect', () => {
+                const popupForm = document.getElementById('popupForm');
+                popupForm.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        socket.emit('debug', 'Enter pressed');
+                        if (document.getElementById('submitButton')) {
+                            submitJoinRoomForm();
+                        }
+                    }
+                });
+            });
+            
             function createRoom() {
                 // Récupérer le pseudo de l'utilisateur
                 username = document.getElementById('username').value;
@@ -127,7 +139,7 @@
                             <option value="public" selected>Public</option>
                             <option value="private">Private</option>
                         </select>
-                        <button type="button" onclick="submitRoomForm()">Create Room</button>
+                        <button type="button" id="submitCreateButton" onclick="submitRoomForm()">Create Room</button>
                     </form>
                     <style>
                         #popupForm {
@@ -212,11 +224,11 @@
                 }
                 // Changer le contenu de la page
                 document.getElementById('popupForm').innerHTML = `
-                    <form id="roomForm">
+                    <form id="roomForm" onsubmit="return false;">
                         <button type="button" id="croix" onclick="document.getElementById('popupForm').innerHTML = ''">X</button>
                         <label for="roomCode">Room Code</label>
                         <input id="roomCode" placeholder="XXXXXX"></input>
-                        <button type="button" onclick="submitJoinRoomForm()">Join Room</button>
+                        <button type="button" id="submitButton" onclick="submitJoinRoomForm()">Join Room</button>
                     </form>
                     <style>
                         #popupForm {
@@ -276,6 +288,8 @@
                 });
                 
             }
+
+            
         </script>
     </body>
 </html>
