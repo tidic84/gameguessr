@@ -36,29 +36,22 @@ app.get('/game/:roomCode', (req, res) => {
         res.status(404).send('Room does not exist');
     }
 });
-/*
-## TEMPLATE FOR USER CREATION
-{
-    id: uuidv4(),
-    name: 'user1',
-    points: 0
-}
-## TEMPLATE FOR ROOM CREATION
-{
-    name: 'room1',
-    users: [user],
-    mode: 'mode1', // 'classic', 'solo', 'team'
-    difficulty: 'difficulty1', // 'easy', 'medium', 'hard'
-    duration: 'quick', // 'quick', 'medium, 'long'
-    privacy: 'privacy1', // 'public', 'private', 'password
-}
-*/
-
 
 io.on('connection', (socket) => {
     
-    console.log('a user connected ' + socket.id);
+    // console.log('a user connected ' + socket.id);
     
+    socket.on('debug', (msg) => {
+        console.log(`debug message: ${msg}`);
+    });
+
+    socket.on('get rooms', () => {
+        socket.emit('rooms', rooms);
+    }); 
+
+    socket.on('get user', (userId) => {
+        socket.emit('user', users[userId]);
+    });
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
@@ -70,6 +63,16 @@ io.on('connection', (socket) => {
                     if (rooms[room].users[userId]) {
                         delete rooms[room].users[userId];
                         io.emit(`player update ${room}`, rooms[room].users);
+                    }
+                    if(Object.keys(rooms[room].users).length === 0) {
+                        setTimeout(function(){
+                                if(rooms[room]) {
+                                    if(Object.keys(rooms[room].users).length === 0) {
+                                    delete rooms[room];
+                                    // console.log('room deleted');
+                                }
+                            }
+                        }, 10000);
                     }
                 }
             }
@@ -112,6 +115,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('room joined', (roomCode, userId) => {
+        console.log(`User: ${userId} joined room: ${roomCode}`);
+        if(users[userId]) console.log(`${users[userId].name}`);
         if (users[userId]) {
             if (users[userId].socketId !== socket.id) {
                 users[userId].socketId = socket.id;
@@ -129,14 +134,6 @@ io.on('connection', (socket) => {
             };
             io.emit(`player update ${roomCode}`, rooms[roomCode].users);
             
-
-            for (let [key, value] of Object.entries(rooms[roomCode].users)) {
-                console.log(`Key: ${key}, Value: ${value}`);
-            }
-            for(user in users) {
-                console.log(users[user].socketId);
-            }
-            
         } else {
             console.log('room does not exist');
         }
@@ -147,7 +144,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('chat message' , (roomCode, userId, message) => {
-        console.log(users[userId].name);
+        // console.log(users[userId].name);
         io.emit(`chat message ${roomCode}`, users[userId].name, message);
     });
     

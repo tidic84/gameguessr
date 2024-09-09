@@ -134,21 +134,32 @@
         <script>
             
             let roomCode;
+            let userId;
             const socket = io(); 
 
             socket.on('connect', () => {
                 let cookie = document.cookie;
                 if (!cookie.includes('userId')) {
+                    socket.emit('debug', 'Creation de l`uuid');
                     console.log("Nouvel utilisateur");
                     socket.emit('uuid');
-                    socket.on('uuid', (uuid) => {
-                        document.cookie = 'userId=' + uuid + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
-                    });
+                    socket.on('uuid', (uuid) => { 
+                        document.cookie = 'userId=' + 0 + '; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;';
+                        userId = document.cookie.split('=')[1];
+                        roomCode = window.location.pathname.split('/')[2];
+                        socket.emit('user create', userId, `Guest${Math.floor(Math.random() * 100)}`, roomCode);
+                        console.log(userId);
+                        socket.emit('room joined', roomCode, userId);
+                        location.reload();
+                    });                    
+                } else {
+                    socket.emit('debug', 'UUid deja existant');
+                    userId = document.cookie.split('=')[1];
+                    roomCode = window.location.pathname.split('/')[2];
+                    socket.emit('room joined', roomCode, userId);
                 }
-                const userId = document.cookie.split('=')[1];
-                roomCode = window.location.pathname.split('/')[2];
+                
 
-                socket.emit('room joined', roomCode, userId);
 
                 socket.on(`player update ${roomCode}`, players => {
                     console.log(players);
