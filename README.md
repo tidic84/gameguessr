@@ -1,6 +1,6 @@
 # GameGuessr
 
-GameGuessr est une application de jeu en ligne où les utilisateurs peuvent créer et rejoindre des salles de jeu, discuter et jouer ensemble.
+GameGuessr est une application de jeu en ligne où les utilisateurs peuvent créer et rejoindre des salles de jeu, discuter et jouer ensemble. Le but du jeu est de trouver le jeu a partir d'une image, puis trouver l'emplacement sur une carte du jeu.
 
 ## Prérequis
 
