@@ -53,6 +53,10 @@ io.on('connection', (socket) => {
         socket.emit('user', users[userId]);
     });
 
+    socket.on('get game', () => {
+        io.emit('game image', Math.floor(Math.random() * 4 + 1));
+    });
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
         let userId = "";

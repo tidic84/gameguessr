@@ -142,6 +142,23 @@
             #scoreList {
                 list-style-type: none;
             }
+
+            #inputGameImage {
+                position: fixed;
+                z-index: 10;
+                bottom: 8%;
+                padding: 10px;
+                border: none;
+                color: white;
+                background-color: rgba(0, 0, 0, 0.4);
+                font-size: large;
+                text-align: center;
+            }
+            .game {
+                align-items: center;
+                justify-content: center;
+                display: flex;
+            }
         </style>
     </head>
     <body>
@@ -150,7 +167,12 @@
                 <h1>GameGuessr</h1>
                 <button onclick="socket.emit('room leave', window.location.pathname.split('/')[2], document.cookie.split('=')[1]);socket.disconnect(); window.location.href = '/'">Leave Room</button>
             </div>
+            <div class="game">
+                <input type="text" size="30" id="inputGameImage"></input>
+            </div>
             <div id="panorama"></div>
+
+            
 
         </div>
         <div id="chatArea">
@@ -172,18 +194,13 @@
             </div>
         </div>
 
-        <script>
-            pannellum.viewer('panorama', {
-                "type": "equirectangular",
-                "autoLoad": true,
-                "showZoomCtrl": false,
-                "showFullscreenCtrl": false,
-                "panorama": "../images/img.jpg"
-            });
+        
         </script>
         <script src="https://kit.fontawesome.com/c947b5c981.js" crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
+            const imageNumber = 0;
+            
             
             let roomCode;
             let userId;
@@ -248,6 +265,18 @@
                     li.innerHTML = `<strong>${username} has left the room</strong>`;
                     chatMessages.appendChild(li);
                 });
+
+                socket.emit('get game', roomCode);
+                socket.on('game image', (imageNumber) => {
+                    pannellum.viewer('panorama', {
+                        "type": "equirectangular",
+                        "disableKeyboardCtrl ": true,
+                        "autoLoad": true,
+                        "showZoomCtrl": false,
+                        "showFullscreenCtrl": false,
+                        "panorama": `../images/cyberpunk${imageNumber}.jpg`
+                    });
+                });
             });
 
             socket.on('game update', (gameState) => {
@@ -284,6 +313,14 @@
                 }
             }
 
-        </script>
+            // Panorama
+            // pannellum.viewer('panorama', {
+            //     "type": "equirectangular",
+            //     "autoLoad": true,
+            //     "showZoomCtrl": false,
+            //     "showFullscreenCtrl": false,
+            //     "panorama": `../images/cyberpunk${imageNumber}.jpg`
+            // });
+        </script>            
     </body>
 </html>
