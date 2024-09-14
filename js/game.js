@@ -92,15 +92,28 @@ socket.on('connect', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight +250;
     });
 
-    socket.on('chat join', (username, roomCode) => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${username} has joined the room</strong>`;
-        chatMessages.appendChild(li);
+    socket.on('chat join', (user, roomC) => {
+        if(roomC == roomCode) {
+            setTimeout(() => {
+                console.log(room.users[user]);
+                username = room.users[user].name;
+                if(!room.users[user].alive) return;
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${username} has joined the room</strong>`;
+                chatMessages.appendChild(li);
+            }, 100);
+        }
     });
-    socket.on('chat leave', (username, roomCode) => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${username} has left the room</strong>`;
-        chatMessages.appendChild(li);
+    socket.on('chat leave', (user, roomC) => {
+        if(roomC == roomCode) {
+            setTimeout(() => {
+                username = room.users[user].name;
+                if(room.users[user].alive) return;
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${username} has left the room</strong>`;
+                chatMessages.appendChild(li);
+            }, 500);
+        }
     });
     
     // GAME

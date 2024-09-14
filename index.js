@@ -92,9 +92,12 @@ io.on('connection', (socket) => {
                 userId = user;
                 for (let room in rooms) {
                     if (rooms[room].users[userId]) {
-                        rooms[room].users[userId].alive = false;
-                        io.emit(`player update ${room}`, rooms[room].users);
-                        io.emit('chat leave', users[userId].name, room);
+                        // setTimeout(function(){
+                            rooms[room].users[userId].alive = false;
+                            io.emit(`player update ${room}`, rooms[room].users);
+                            io.emit('chat leave', userId, room);
+                            io.emit('room update', room, rooms[room]);
+                        // }, 250);
                     }
                     if(Object.keys(rooms[room].users).length === 0 || Object.values(rooms[room].users).every(user => user.alive === false)) {
                         setTimeout(function(){
@@ -112,15 +115,15 @@ io.on('connection', (socket) => {
     });
 
     
-    socket.on('room leave', (roomCode, userId) => {
-        if (rooms[roomCode]) {
-            console.log(`room ${roomCode} left`);
-            delete rooms[roomCode].users[userId].name;
-            io.emit(`player update ${roomCode}`, rooms[roomCode].users);
-        } else {
-            console.log('room does not exist');
-        }
-    })
+    // socket.on('room leave', (roomCode, userId) => {
+    //     if (rooms[roomCode]) {
+    //         console.log(`room ${roomCode} left`);
+    //         delete rooms[roomCode].users[userId].name;
+    //         io.emit(`player update ${roomCode}`, rooms[roomCode].users);
+    //     } else {
+    //         console.log('room does not exist');
+    //     }
+    // })
     
     socket.on('user create', (userId, username) => {
         users[`${userId}`] = {
@@ -171,10 +174,11 @@ io.on('connection', (socket) => {
                     alive: true
                 };
             } else {
+                rooms[roomCode].users[userId].name = users[userId].name;
                 rooms[roomCode].users[userId].alive = true;
             }
             io.emit(`player update ${roomCode}`, rooms[roomCode].users);
-            io.emit('chat join', users[userId].name, roomCode);
+            io.emit('chat join', userId, roomCode);
             
         } else {
             console.log('room does not exist');
