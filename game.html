@@ -54,7 +54,7 @@
                 background-color: #e2a3a3;
                 width: 100%;
                 box-sizing: border-box;
-                z-index: 1000;
+                z-index: 10;
             }
             .header h1 {
                 color: white;
@@ -76,6 +76,10 @@
             #panorama {
                 height: 100%;
                 overflow: hidden;
+                display: none;
+            }
+            #panorama.active {
+                display: block;
             }
             #chatArea {
                 display: flex;
@@ -153,27 +157,63 @@
                 background-color: rgba(0, 0, 0, 0.4);
                 font-size: large;
                 text-align: center;
+                display: none;
+                
+            }
+            #inputGameImage:focus {
+                outline: none;
+            }
+            #inputGameImage.active {
+                display: block;
             }
             .game {
                 align-items: center;
                 justify-content: center;
                 display: flex;
             }
+
+            .startButton {
+                background-color: white;
+                color: black;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 50%;
+                cursor: pointer;
+                border: none;
+                border-radius: 4px;
+                display: none;
+                width: 30%;
+                position: absolute;
+                transition: 0.3s;
+            }
+            .startButton:hover {
+                background-color: #d3d3d3;
+            }
+            .startButton.active {
+                display: block;
+            }
+            .startButton:disabled {
+                background-color: #d3d3d3;
+                cursor: not-allowed;
+            }
         </style>
     </head>
     <body>
+        <div id="winnerMessage"></div>
         <div id="gameArea">
             <div class="header">
                 <h1>GameGuessr</h1>
                 <button onclick="socket.emit('room leave', window.location.pathname.split('/')[2], document.cookie.split('=')[1]);socket.disconnect(); window.location.href = '/'">Leave Room</button>
             </div>
             <div class="game">
+                <button id="startButton" class="startButton active" onclick="startButton()" disabled> Start </button>
                 <input type="text" size="30" id="inputGameImage"></input>
             </div>
             <div id="panorama"></div>
-
-            
-
         </div>
         <div id="chatArea">
             <div id="tabs">
@@ -198,129 +238,9 @@
         </script>
         <script src="https://kit.fontawesome.com/c947b5c981.js" crossorigin="anonymous"></script>
         <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/game.js"></script>
         <script>
-            const imageNumber = 0;
             
-            
-            let roomCode;
-            let userId;
-            const socket = io(); 
-
-            socket.on('connect', () => {
-                let cookie = document.cookie;
-                if (!cookie.includes('userId')) {
-                    socket.emit('debug', 'Creation de l`uuid');
-                    console.log("Nouvel utilisateur");
-                    socket.emit('uuid');
-                    socket.on('uuid', (uuid) => { 
-                        document.cookie = 'userId=' + 0 + '; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;';
-                        userId = document.cookie.split('=')[1];
-                        roomCode = window.location.pathname.split('/')[2];
-                        socket.emit('user create', userId, `Guest${Math.floor(Math.random() * 100)}`, roomCode);
-                        console.log(userId);
-                        socket.emit('room joined', roomCode, userId);
-                        location.reload();
-                    });                    
-                } else {
-                    socket.emit('debug', 'UUid deja existant');
-                    userId = document.cookie.split('=')[1];
-                    roomCode = window.location.pathname.split('/')[2];
-                    socket.emit('room joined', roomCode, userId);
-                }
-                
-
-
-                socket.on(`player update ${roomCode}`, players => {
-                    console.log(players);
-                    updatePlayerList(players);
-                });
-
-                // CHAT
-                const chatMessages = document.getElementById('chat');
-                const typeArea = document.getElementById('typeArea');
-
-                typeArea.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        if (typeArea.value != "") socket.emit('chat message', roomCode, userId, typeArea.value);
-                        typeArea.value = '';
-                    }
-                });
-
-                socket.on(`chat message ${roomCode}`, (user, message) => {
-                    var scrollMaxY = window.scrollMaxY || (document.documentElement.scrollHeight - document.documentElement.clientHeight)
-
-                    const li = document.createElement('li');
-                    li.textContent = user + ": " +message;
-                    chatMessages.appendChild(li);
-                    chatMessages.scrollTop = chatMessages.scrollHeight +250;
-                });
-
-                socket.on('chat join', (username, roomCode) => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${username} has joined the room</strong>`;
-                    chatMessages.appendChild(li);
-                });
-                socket.on('chat leave', (username, roomCode) => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${username} has left the room</strong>`;
-                    chatMessages.appendChild(li);
-                });
-
-                socket.emit('get game', roomCode);
-                socket.on('game image', (imageNumber) => {
-                    pannellum.viewer('panorama', {
-                        "type": "equirectangular",
-                        "disableKeyboardCtrl ": true,
-                        "autoLoad": true,
-                        "showZoomCtrl": false,
-                        "showFullscreenCtrl": false,
-                        "panorama": `../images/cyberpunk${imageNumber}.jpg`
-                    });
-                });
-            });
-
-            socket.on('game update', (gameState) => {
-                // Update the game area with the new game state
-                document.getElementById('gameArea').innerHTML = JSON.stringify(gameState);
-            });
-            
-            function showTab(tabId) {
-                console.log(`TabId: ${tabId}`);
-
-                const tabs = document.querySelectorAll('.tab');
-                const contents = document.querySelectorAll('.content');
-
-                tabs.forEach(tab => {
-                    tab.classList.remove('active');
-                });
-
-                contents.forEach(content => {
-                    content.classList.remove('active');
-                });
-
-                document.getElementById(`tab${tabId}`).classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            }
-
-            function updatePlayerList(players) {
-                var list = document.getElementById('scoreList');
-                list.innerHTML = '';
-
-                for (const player in players) {
-                    var li = document.createElement('li');
-                    li.textContent = players[player].name + ': ' + players[player].points;
-                    list.appendChild(li);
-                }
-            }
-
-            // Panorama
-            // pannellum.viewer('panorama', {
-            //     "type": "equirectangular",
-            //     "autoLoad": true,
-            //     "showZoomCtrl": false,
-            //     "showFullscreenCtrl": false,
-            //     "panorama": `../images/cyberpunk${imageNumber}.jpg`
-            // });
         </script>            
     </body>
 </html>

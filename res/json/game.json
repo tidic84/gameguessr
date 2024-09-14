@@ -1,0 +1,18 @@
+[
+    {
+        "image": "../images/cp1.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"]
+    },
+    {
+        "image": "../images/cp2.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"]
+    },
+    {
+        "image": "../images/cp3.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"]
+    },
+    {
+        "image": "../images/cp4.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"]
+    }
+]
