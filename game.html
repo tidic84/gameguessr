@@ -6,6 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core/index.min.css" /></head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
         <style>
             html, body {
@@ -19,7 +22,15 @@
                 padding: 20px;
                 box-sizing: border-box;
             }
-            
+            #map {
+                height: 100%;
+                width: 100%;
+                z-index: 15;
+                display: none;
+            }
+            #map.active {
+                display: block;
+            }
             #gameArea, #chatArea {
                 height: 100%;
                 width: 100%;
@@ -200,6 +211,36 @@
                 background-color: #d3d3d3;
                 cursor: not-allowed;
             }
+
+            .mapConfirmButton {
+                background-color: white;
+                color: black;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                margin-left: auto;
+                margin-right: auto;
+                /* margin-top: 50%; */
+                bottom: 10%;
+                cursor: pointer;
+                border: none;
+                border-radius: 4px;
+                display: none;
+                width: 30%;
+                position: absolute;
+                transition: 0.3s;
+                z-index: 26;
+            }
+            .mapConfirmButton:hover {
+                background-color: #d3d3d3;
+            }
+            .mapConfirmButton.active {
+                display: block;
+            }
+            .leaflet-container {
+                background-color:rgba(255,0,0,0.0);
+            }
         </style>
     </head>
     <body>
@@ -212,8 +253,10 @@
             <div class="game">
                 <button id="startButton" class="startButton active" onclick="startButton()" disabled> Start </button>
                 <input type="text" size="30" id="inputGameImage"></input>
+                <button id="mapConfirmButton" class="mapConfirmButton" onclick="mapConfirmButton()"> Confirm </button>
             </div>
             <div id="panorama"></div>
+            <div id="map" class=""></div>
         </div>
         <div id="chatArea">
             <div id="tabs">
@@ -237,6 +280,7 @@
         
         </script>
         <script src="https://kit.fontawesome.com/c947b5c981.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/game.js"></script>
         <script>

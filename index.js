@@ -194,24 +194,37 @@ io.on('connection', (socket) => {
         io.emit('room update', roomCode, rooms[roomCode]);
     });
 
-    socket.on('game answer', (roomCode, userId, correct , mode, gameState, roomGameDB) => {
-        if (correct && mode == "name" && rooms[roomCode].users[userId].status == false) rooms[roomCode].users[userId].points += 100;
-        rooms[roomCode].users[userId].status = true;
-        io.emit(`player update ${roomCode}`, rooms[roomCode].users);
+    socket.on('game answer', (roomCode, userId, correct , mode, gameState, roomGameDB, points) => {
+        if ( mode == "name") {
+            if (correct && rooms[roomCode].users[userId].status == false) {
+                rooms[roomCode].users[userId].points += 100;
+                rooms[roomCode].gameState = gameState+ " map";
+            }
+            if (!correct) rooms[roomCode].users[userId].status = true;
+            io.emit(`player update ${roomCode}`, rooms[roomCode].users);
+        }
 
-        // Changer d'image
+        if ( mode == "map") {
+            rooms[roomCode].users[userId].status = true;
+            rooms[roomCode].users[userId].points += points;
+            io.emit(`player update ${roomCode}`, rooms[roomCode].users);
+            
+        }
+            
+
+
         if (Object.values(rooms[roomCode].users).every(user => user.status == true)) {
-            console.log('all players answered');
-            console.log(roomGameDB[gameState.split(' ')[1]]);
+            // console.log('all players answered');
+            // console.log(roomGameDB[gameState.split(' ')[1]]);
             if(roomGameDB[gameState.split(' ')[1]]) {
-                console.log('next image');
+                // console.log('next image');
                 rooms[roomCode].gameState = `image ${parseInt(gameState.split(' ')[1])+1}`;
                 rooms[roomCode].users = Object.fromEntries(Object.entries(rooms[roomCode].users).map(([key, value]) => [key, {...value, status: false}]));
                 io.emit('game update', roomCode, rooms[roomCode], rooms[roomCode].gameState);
                 io.emit('room update', roomCode, rooms[roomCode]);
                 io.emit('game image update', roomCode, parseInt(gameState.split(' ')[1])+1);
             } else {
-                console.log('end of game');
+                // console.log('end of game');
                 rooms[roomCode].gameState = "end";
                 rooms[roomCode].users = Object.fromEntries(Object.entries(rooms[roomCode].users).map(([key, value]) => [key, {...value, status: false}]));
                 io.emit('game update', roomCode, rooms[roomCode], rooms[roomCode].gameState);
