@@ -378,7 +378,7 @@ function startButton() {
 
 function mapConfirmButton() {
     if (currentMarker && !room.users[userId].status) {
-        let correct = [1880, 1445];
+        let correct = room.gameDB[gameState.split(' ')[1]-1].location;
         let marker = currentMarker.getLatLng();
         let x = marker.lng;
         let y = marker.lat;
