@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-07-02T13:26:43.769Z",
+  "securityValidation": "PASSED",
+  "checks": {
+    "gameStartPermissions": true,
+    "nextImagePermissions": true,
+    "gameResetPermissions": true,
+    "getUserIdFunction": true,
+    "ownerCheck": true,
+    "errorEmission": true
+  },
+  "score": "6/6",
+  "status": "SECURED"
+}

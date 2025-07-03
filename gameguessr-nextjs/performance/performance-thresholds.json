@@ -1,0 +1,18 @@
+{
+  "performance": 90,
+  "accessibility": 95,
+  "bestPractices": 95,
+  "seo": 95,
+  "metrics": {
+    "TTFB": 200,
+    "FCP": 1000,
+    "LCP": 2500,
+    "TBT": 200,
+    "CLS": 0.1,
+    "TTI": 3500
+  },
+  "game": {
+    "chatRenderTime": 100,
+    "panoramaLoadTime": 1000
+  }
+}

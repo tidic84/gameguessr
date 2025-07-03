@@ -1,0 +1,26 @@
+[
+    {
+        "image": "../images/cp1.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"],
+        "map": [3, 4, ["cpmap", ".jpg"]],
+        "location": [1885, 1260]
+    },
+    {
+        "image": "../images/cp2.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"],
+        "map": [3, 4, ["cpmap", ".jpg"]],
+        "location": [3020, 1490]
+    },
+    {
+        "image": "../images/cp3.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"],
+        "map": [3, 4, ["cpmap", ".jpg"]],
+        "location": [2070, 1260]
+    },
+    {
+        "image": "../images/cp4.jpg",
+        "game": ["Cyberpunk", "Cyberpunk2077"],
+        "map": [3, 4, ["cpmap", ".jpg"]],
+        "location": [2400, 1720]
+    }
+]

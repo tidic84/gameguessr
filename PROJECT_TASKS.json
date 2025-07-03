@@ -1,0 +1,464 @@
+{
+  "projectInfo": {
+    "name": "GameGuessr Migration to Next.js",
+    "version": "1.0.0",
+    "description": "Migration complète de GameGuessr d'une architecture Express/Socket.io vers Next.js moderne",
+    "startDate": "2025-01-02",
+    "estimatedDuration": "9-15 semaines"
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "title": "Phase 1: Configuration et Architecture Next.js",
+      "description": "Mise en place de la base technique moderne",
+      "estimatedDuration": "1-2 semaines",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-1-1",
+          "title": "Initialisation du projet Next.js",
+          "description": "Créer nouveau projet Next.js avec TypeScript, ESLint, Prettier",
+          "priority": "high",
+          "status": "completed",
+          "estimatedHours": 4,
+          "dependencies": [],
+          "subtasks": [
+            "Créer projet Next.js 14 avec TypeScript",
+            "Configurer ESLint et Prettier",
+            "Configurer Tailwind CSS",
+            "Installer les dépendances de base"
+          ]
+        },
+        {
+          "id": "task-1-2",
+          "title": "Installation des dépendances principales",
+          "description": "Installer et configurer toutes les librairies nécessaires",
+          "priority": "high",
+          "status": "completed",
+          "estimatedHours": 3,
+          "dependencies": [
+            "task-1-1"
+          ],
+          "subtasks": [
+            "socket.io-client pour WebSocket",
+            "@types/leaflet pour les cartes",
+            "pannellum-react pour images 360°",
+            "framer-motion pour animations",
+            "react-hot-toast pour notifications",
+            "zustand pour l'état global"
+          ]
+        },
+        {
+          "id": "task-1-3",
+          "title": "Structure des dossiers et architecture",
+          "description": "Organiser la structure de projet selon les bonnes pratiques Next.js",
+          "priority": "high",
+          "status": "completed",
+          "estimatedHours": 2,
+          "dependencies": [
+            "task-1-1"
+          ],
+          "subtasks": [
+            "Créer structure app/",
+            "Organiser components/ par domaine",
+            "Configurer hooks/ et lib/",
+            "Mettre en place store/ pour Zustand"
+          ]
+        },
+        {
+          "id": "task-1-4",
+          "title": "Configuration TypeScript et interfaces",
+          "description": "Définir tous les types TypeScript pour la type safety",
+          "priority": "medium",
+          "status": "completed",
+          "estimatedHours": 4,
+          "dependencies": [
+            "task-1-3"
+          ],
+          "subtasks": [
+            "Interface User, Room, GameState",
+            "Types pour les événements Socket.io",
+            "Types pour GameData et Location",
+            "Configuration tsconfig.json optimale"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "title": "Phase 2: Backend Next.js avec API Routes",
+      "description": "Migration du serveur Express vers Next.js API Routes",
+      "estimatedDuration": "1-2 semaines",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-2-1",
+          "title": "Migration du serveur Socket.io",
+          "description": "Intégrer Socket.io avec Next.js API Routes",
+          "priority": "critical",
+          "status": "completed",
+          "estimatedHours": 8,
+          "dependencies": [
+            "task-1-4"
+          ],
+          "subtasks": [
+            "Créer /api/socket.js pour Next.js",
+            "Migrer logique de gestion des salles",
+            "Migrer logique de gestion des utilisateurs",
+            "Migrer logique du jeu (états, scores)"
+          ]
+        },
+        {
+          "id": "task-2-2",
+          "title": "Création des API Routes REST",
+          "description": "APIs pour compléter les fonctionnalités WebSocket",
+          "priority": "high",
+          "status": "completed",
+          "estimatedHours": 6,
+          "dependencies": [
+            "task-2-1"
+          ],
+          "subtasks": [
+            "/api/rooms pour CRUD des salles",
+            "/api/users pour gestion utilisateurs",
+            "/api/game-data pour données de jeu",
+            "/api/health pour monitoring"
+          ]
+        },
+        {
+          "id": "task-2-3",
+          "title": "Migration vers base de données moderne",
+          "description": "Remplacer JSON par SQLite/PostgreSQL avec Prisma",
+          "priority": "medium",
+          "status": "pending",
+          "estimatedHours": 10,
+          "dependencies": [
+            "task-2-2"
+          ],
+          "subtasks": [
+            "Configurer Prisma ORM",
+            "Créer schémas de base de données",
+            "Système de migration des données",
+            "API pour upload d'images de jeu"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "title": "Phase 3: Composants UI Modernes",
+      "description": "Reconstruction de l'interface utilisateur avec React moderne",
+      "estimatedDuration": "2-3 semaines",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-3-1",
+          "title": "Page d'accueil modernisée",
+          "description": "Interface d'accueil responsive et animée",
+          "priority": "high",
+          "status": "completed",
+          "estimatedHours": 12,
+          "dependencies": [
+            "task-1-4"
+          ],
+          "subtasks": [
+            "Design responsive avec Tailwind CSS",
+            "Formulaire création de salle avec validation",
+            "Formulaire connexion à une salle",
+            "Animations avec Framer Motion",
+            "Intégration état global Zustand"
+          ]
+        },
+        {
+          "id": "task-3-2",
+          "title": "Interface de jeu refactorisée",
+          "description": "Zone de jeu principale avec tous les composants",
+          "priority": "critical",
+          "status": "completed",
+          "estimatedHours": 16,
+          "dependencies": [
+            "task-3-1"
+          ],
+          "subtasks": [
+            "Layout responsive 2 colonnes",
+            "Composant images 360° (Pannellum React)",
+            "Composant carte interactive (React Leaflet)",
+            "Zone de saisie avec autocomplétion",
+            "Indicateurs de progression et timer"
+          ]
+        },
+        {
+          "id": "task-3-3",
+          "title": "Système de chat amélioré",
+          "description": "Interface de chat moderne et interactive",
+          "priority": "medium",
+          "status": "completed",
+          "estimatedHours": 8,
+          "dependencies": [
+            "task-3-1"
+          ],
+          "subtasks": [
+            "Interface bulles de messages",
+            "Émojis et réactions",
+            "Messages système",
+            "Historique scrollable"
+          ]
+        },
+        {
+          "id": "task-3-4",
+          "title": "Tableau des scores dynamique",
+          "description": "Affichage temps réel des scores avec animations",
+          "priority": "medium",
+          "status": "completed",
+          "estimatedHours": 6,
+          "dependencies": [
+            "task-3-1"
+          ],
+          "subtasks": [
+            "Affichage temps réel des scores",
+            "Animations changements de score",
+            "Indicateur joueur hôte",
+            "Status joueurs (en ligne/hors ligne)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "title": "Phase 4: Intégration Socket.io Client",
+      "description": "Connexion temps réel entre frontend et backend",
+      "estimatedDuration": "1 semaine",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-4-1",
+          "title": "Hook personnalisé useSocket",
+          "description": "Abstraction pour gérer les connexions WebSocket",
+          "priority": "critical",
+          "status": "completed",
+          "estimatedHours": 6,
+          "dependencies": [
+            "task-2-1",
+            "task-3-2"
+          ],
+          "subtasks": [
+            "Hook pour connexion Socket.io",
+            "Reconnexion automatique",
+            "Gestion états de connexion",
+            "Typesafety pour événements"
+          ]
+        },
+        {
+          "id": "task-4-2",
+          "title": "État global avec Zustand",
+          "description": "Stores pour synchroniser les données en temps réel",
+          "priority": "high",
+          "status": "completed",
+          "estimatedHours": 4,
+          "dependencies": [
+            "task-4-1"
+          ],
+          "subtasks": [
+            "Store utilisateur actuel",
+            "Store état de la salle",
+            "Store état du jeu",
+            "Store messages de chat"
+          ]
+        },
+        {
+          "id": "task-4-3",
+          "title": "Synchronisation temps réel",
+          "description": "Intégrer tous les composants avec le WebSocket",
+          "priority": "critical",
+          "status": "pending",
+          "estimatedHours": 8,
+          "dependencies": [
+            "task-4-2"
+          ],
+          "subtasks": [
+            "Synchronisation des scores",
+            "Synchronisation des réponses",
+            "Synchronisation du chat",
+            "Gestion des déconnexions"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-5",
+      "title": "Phase 5: Fonctionnalités de Jeu Avancées",
+      "description": "Amélioration de l'expérience de jeu",
+      "estimatedDuration": "1-2 semaines",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-5-1",
+          "title": "Système de jeu amélioré",
+          "description": "Fonctionnalités de jeu plus robustes",
+          "priority": "medium",
+          "status": "pending",
+          "estimatedHours": 10,
+          "dependencies": [
+            "task-4-3"
+          ],
+          "subtasks": [
+            "Validation côté client et serveur",
+            "Timer visuel pour les réponses",
+            "Système de hints/indices",
+            "Mode spectateur",
+            "Replay des parties"
+          ]
+        },
+        {
+          "id": "task-5-2",
+          "title": "Système de scoring sophistiqué",
+          "description": "Calculs de score plus précis et équitables",
+          "priority": "medium",
+          "status": "pending",
+          "estimatedHours": 6,
+          "dependencies": [
+            "task-5-1"
+          ],
+          "subtasks": [
+            "Calcul basé distance et temps",
+            "Bonus réponses rapides",
+            "Malus mauvaises réponses",
+            "Classement global joueurs"
+          ]
+        },
+        {
+          "id": "task-5-3",
+          "title": "Modes de jeu étendus",
+          "description": "Nouveaux modes pour plus de variété",
+          "priority": "low",
+          "status": "pending",
+          "estimatedHours": 12,
+          "dependencies": [
+            "task-5-2"
+          ],
+          "subtasks": [
+            "Mode Classic (existant)",
+            "Mode Solo (entraînement)",
+            "Mode Team (équipes)",
+            "Mode Battle Royale",
+            "Mode Ranked"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-6",
+      "title": "Phase 6: UX/UI Polish et Optimisations",
+      "description": "Finalisation de l'expérience utilisateur",
+      "estimatedDuration": "1-2 semaines",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-6-1",
+          "title": "Design System complet",
+          "description": "Cohérence visuelle sur toute l'application",
+          "priority": "medium",
+          "status": "pending",
+          "estimatedHours": 8,
+          "dependencies": [
+            "task-3-4"
+          ],
+          "subtasks": [
+            "Palette de couleurs cohérente",
+            "Système de typographie",
+            "Composants UI réutilisables",
+            "Thème sombre/clair",
+            "Responsive design mobile-first"
+          ]
+        },
+        {
+          "id": "task-6-2",
+          "title": "Animations et Microinteractions",
+          "description": "Fluidité et feedback visuel",
+          "priority": "low",
+          "status": "pending",
+          "estimatedHours": 10,
+          "dependencies": [
+            "task-6-1"
+          ],
+          "subtasks": [
+            "Transitions de page fluides",
+            "Animations de chargement",
+            "Feedback visuel pour actions",
+            "Effets hover et focus",
+            "Animations de score"
+          ]
+        },
+        {
+          "id": "task-6-3",
+          "title": "Performance et Optimisations",
+          "description": "Optimisations pour une expérience fluide",
+          "priority": "high",
+          "status": "pending",
+          "estimatedHours": 6,
+          "dependencies": [
+            "task-5-3"
+          ],
+          "subtasks": [
+            "Lazy loading des images",
+            "Optimisation images (Next.js Image)",
+            "Code splitting automatique",
+            "Préchargement données de jeu",
+            "Mise en cache intelligente"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-7",
+      "title": "Phase 7: Déploiement et Infrastructure",
+      "description": "Mise en production et monitoring",
+      "estimatedDuration": "1 semaine",
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "task-7-1",
+          "title": "Configuration de déploiement",
+          "description": "Préparation pour la production",
+          "priority": "critical",
+          "status": "pending",
+          "estimatedHours": 6,
+          "dependencies": [
+            "task-6-3"
+          ],
+          "subtasks": [
+            "Configuration Vercel/Netlify",
+            "Variables d'environnement",
+            "Base de données cloud",
+            "CDN pour les assets",
+            "Monitoring et analytics"
+          ]
+        },
+        {
+          "id": "task-7-2",
+          "title": "CI/CD et Testing",
+          "description": "Pipeline de développement robuste",
+          "priority": "medium",
+          "status": "pending",
+          "estimatedHours": 8,
+          "dependencies": [
+            "task-7-1"
+          ],
+          "subtasks": [
+            "Tests unitaires (Jest)",
+            "Tests d'intégration (Cypress)",
+            "GitHub Actions pour CI/CD",
+            "Tests de performance",
+            "Tests de charge Socket.io"
+          ]
+        }
+      ]
+    }
+  ],
+  "currentPhase": "phase-1",
+  "nextActions": [
+    "Commencer par task-1-1: Initialisation du projet Next.js",
+    "Analyser plus en détail l'architecture actuelle",
+    "Préparer l'environnement de développement"
+  ]
+}

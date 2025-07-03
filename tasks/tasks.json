@@ -1,0 +1,588 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Phase 5 - Tests Robustesse Multi-Room",
+        "description": "Valider la robustesse du système temps réel avec plusieurs rooms simultanées",
+        "status": "done",
+        "priority": "high",
+        "details": "Créer des tests complets pour valider :\n- Timer indépendant par room\n- Synchronisation événements\n- Gestion déconnexions\n- Nettoyage ressources automatique",
+        "dependencies": [],
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Test Timer Multi-Room",
+            "description": "Test Timer Multi-Room Indépendant",
+            "details": "Créer 3+ rooms simultanées avec des durées différentes. Valider que chaque timer fonctionne indépendamment et que les transitions d'images sont isolées par room.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Test Chat Isolation",
+            "description": "Test Chat Multi-Room Isolation",
+            "details": "Valider que les messages de chat sont correctement isolés par room et qu'un utilisateur dans une room ne reçoit pas les messages d'autres rooms.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Test Permissions Admin",
+            "description": "Test Contrôles Admin Permissions",
+            "details": "Valider que seuls les administrateurs de room peuvent contrôler le jeu (start/stop/next) et que les permissions sont respectées entre différentes rooms.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 4,
+            "title": "Test Déconnexions",
+            "description": "Test Nettoyage Déconnexions",
+            "details": "Tester la gestion des déconnexions utilisateur : nettoyage timers, suppression rooms vides, persistance état pour reconnexions rapides.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Résolution Problèmes Serveur TypeScript",
+        "description": "Corriger les problèmes de démarrage du serveur TypeScript",
+        "status": "done",
+        "priority": "high",
+        "details": "Problèmes identifiés :\n- tsx/ts-node ne trouve pas les fichiers\n- Problèmes de chemins répertoires\n- Configuration TypeScript Next.js\n\nSolutions à tester :\n- Script npm avec chemin absolu\n- Configuration tsconfig serveur\n- Compilation manuelle TypeScript",
+        "dependencies": [],
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Serveur JavaScript temps réel créé",
+            "description": "Créé server-realtime.js - serveur JavaScript avec fonctionnalités temps réel complètes",
+            "details": "Serveur JavaScript pur évitant les problèmes tsx/ts-node. Fonctionnalités implémentées: timer multi-room synchronisé, transition automatique d'images, contrôles admin temps réel, chat multi-room, gestion états de jeu robuste",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 2,
+            "title": "Tests serveur temps réel",
+            "description": "Créer tests de validation du serveur temps réel",
+            "details": "Tests à créer: démarrage serveur, création/gestion rooms, timer synchronisé, transition images, chat multi-room, nettoyage déconnexions",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 2
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Optimisation Store Zustand",
+        "description": "Optimiser les re-renders et la performance du store Zustand",
+        "status": "done",
+        "priority": "medium",
+        "details": "Améliorer :\n- Memoisation des sélecteurs\n- Éviter re-renders inutiles\n- Optimiser hooks personnalisés\n- Ajouter devtools avancés",
+        "dependencies": [
+          2
+        ],
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Optimiser sélecteurs avec memoisation",
+            "description": "Ajouter memoisation aux sélecteurs pour éviter re-renders inutiles",
+            "details": "Utiliser React.useMemo et useCallback pour optimiser les hooks sélecteurs personnalisés et éviter les re-calculs inutiles",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 2,
+            "title": "Diviser store en slices modulaires",
+            "description": "Séparer le store en slices pour une meilleure modularité",
+            "details": "Diviser le store monolithique en plusieurs slices (userSlice, roomSlice, chatSlice, gameSlice) pour améliorer la performance et la maintenabilité",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 3,
+            "title": "Ajouter persistance localStorage",
+            "description": "Implémenter la persistance pour certaines données utilisateur",
+            "details": "Ajouter persistance localStorage pour l'utilisateur et les préférences, avec middleware persist de Zustand",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 4,
+            "title": "Implémenter actions batch",
+            "description": "Optimiser les actions batch pour réduire les re-renders",
+            "details": "Regrouper les mises à jour d'état similaires en batch pour éviter plusieurs re-renders consécutifs",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Interface GameControls - Tests et Polish",
+        "description": "Finaliser et tester l'interface d'administration en temps réel",
+        "status": "done",
+        "priority": "medium",
+        "details": "Valider :\n- Permissions admin uniquement\n- Contrôles en temps réel (start/stop/next)\n- Affichage état synchronisé\n- Design responsive\n- Feedback utilisateur",
+        "dependencies": [
+          2
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Chat Multi-Room - Optimisations",
+        "description": "Optimiser et enrichir le système de chat temps réel",
+        "status": "done",
+        "priority": "medium",
+        "details": "Améliorations :\n- Limite historique messages\n- Types de messages enrichis\n- Notifications visuelles\n- Emoji et formatage\n- Modération basique",
+        "dependencies": [
+          3
+        ],
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Types de Messages Enrichis",
+            "description": "Implémenter différents types de messages avec formatage",
+            "details": "- Messages system (connexions, jeu)\n- Messages game (events, scores)\n- Messages user avec emoji et formatage\n- Horodatage et métadonnées",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 2,
+            "title": "Notifications et Feedback Visuel",
+            "description": "Ajouter des notifications visuelles et animations",
+            "details": "- Notifications nouveaux messages\n- Indicateur de frappe (typing indicator)\n- Animations d'apparition messages\n- Badge non-lus",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 3,
+            "title": "Optimisations Performance Chat",
+            "description": "Optimiser les performances du chat",
+            "details": "- Limite d'historique intelligent\n- Pagination des anciens messages\n- Optimisation re-renders\n- Compression données",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 4,
+            "title": "Modération Chat",
+            "description": "Implémenter modération et filtres basiques",
+            "details": "- Filtre mots inappropriés\n- Limite de fréquence messages\n- Commandes admin chat\n- Report/block utilisateurs",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 5,
+            "title": "Tests Chat Amélioré",
+            "description": "Créer des tests pour les nouvelles fonctionnalités chat",
+            "details": "- Tests types de messages\n- Tests modération\n- Tests performance\n- Tests intégration serveur",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Animations et Transitions Fluides",
+        "description": "Implémenter des animations fluides pour toutes les transitions",
+        "status": "done",
+        "priority": "medium",
+        "details": "Animer :\n- Transitions entre images 360°\n- Changements d'état de jeu\n- Apparition/disparition composants\n- Feedback interactions utilisateur\n- Loading states",
+        "dependencies": [
+          4
+        ],
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Système central d'animations",
+            "description": "Créer un système central d'animations réutilisables",
+            "details": "Implémenter un fichier utils/animations.tsx avec des animations standardisées pour:\n- Durées d'animation\n- Courbes d'accélération (easings)\n- Variants prédéfinis\n- Animations de base (fade, slide, zoom)\n- Animations de feedback (success, error)",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 2,
+            "title": "Transitions d'images 360°",
+            "description": "Ajouter des transitions fluides entre les images panoramiques",
+            "details": "Améliorer le composant PanoramaViewer avec:\n- Transitions en fondu\n- Effets de zoom progressif\n- Gestion des changements d'image\n- Animation de chargement",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 3,
+            "title": "Transitions d'état de jeu",
+            "description": "Créer des transitions entre les différents états du jeu",
+            "details": "Implémenter un composant GameStateTransition pour:\n- Transitions entre attente/démarrage/jeu/pause/fin\n- Messages informatifs animés\n- Effets visuels appropriés à chaque transition",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 4,
+            "title": "Loading states animés",
+            "description": "Créer des animations pour les états de chargement",
+            "details": "Implémenter un composant SkeletonLoader avec:\n- Effet shimmer (brillance)\n- Différentes variantes (texte, rectangle, cercle, etc.)\n- Composants prédéfinis (card, avatar, table)\n- Animation de pulsation",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 5,
+            "title": "Animations de feedback utilisateur",
+            "description": "Implémenter des animations pour le feedback d'interaction",
+            "details": "Créer des composants AnimatedFeedback pour:\n- Boutons avec feedback (success/error)\n- Éléments drag & drop\n- Formulaires avec états\n- Animations de succès/erreur",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 6,
+            "title": "Documentation des animations",
+            "description": "Créer une documentation détaillée du système d'animations",
+            "details": "Rédiger:\n- Un rapport d'implémentation\n- Un guide d'utilisation pour les développeurs\n- Exemples d'utilisation\n- Bonnes pratiques",
+            "status": "done",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 7,
+            "title": "Intégration globale des animations",
+            "description": "Intégrer les animations dans tous les composants principaux",
+            "details": "Appliquer les animations à:\n- Tableau des scores\n- Chat\n- Menu principal\n- Modals et popups\n- Notifications",
+            "status": "done",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 8,
+            "title": "Intégration des animations dans le store Zustand",
+            "description": "Ajouter la gestion d'état des animations dans le store global",
+            "details": "Implémenter dans le store Zustand:\n- Interface AnimationState pour centraliser l'état des animations\n- Sélecteurs optimisés pour les animations\n- Hooks personnalisés pour faciliter l'utilisation (useAnimation, useAnimationTrigger)\n- Actions pour gérer les animations (trigger, reset, settings)\n- Persistance des préférences d'animation\n- Guide d'utilisation spécifique au store",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 9,
+            "title": "Animations du tableau des scores",
+            "description": "Intégrer les animations dans le tableau des scores",
+            "details": "Améliorer le composant Scoreboard avec:\n- Animations d'entrée/sortie des utilisateurs\n- Transitions pour les mises à jour de score\n- Effets visuels pour les changements de classement\n- Mise en évidence du joueur actuel\n- Feedback visuel pour les meilleurs scores\n- Utilisation des hooks d'animation du store Zustand",
+            "status": "done",
+            "dependencies": [
+              1,
+              8
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 10,
+            "title": "Animations du composant Chat",
+            "description": "Intégrer les animations dans le composant Chat",
+            "details": "Améliorer le composant Chat avec:\n- Animations d'apparition des nouveaux messages\n- Effet de typing indicator animé\n- Badge de notification animé pour nouveaux messages\n- Transitions pour les actions de modération\n- Feedback visuel pour les réactions aux messages\n- Intégration avec les hooks personnalisés du store Zustand",
+            "status": "done",
+            "dependencies": [
+              1,
+              8
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 11,
+            "title": "Animations du menu principal et navigation",
+            "description": "Intégrer les animations dans le menu principal et la navigation",
+            "details": "Améliorer les composants de navigation avec:\n- Transitions entre les différentes pages/vues\n- Animations pour l'ouverture/fermeture du menu\n- Effets de hover et focus sur les éléments de menu\n- Indicateur de page active animé\n- Feedback visuel pour les actions de navigation\n- Utilisation des hooks d'animation du store Zustand",
+            "status": "done",
+            "dependencies": [
+              1,
+              8
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 12,
+            "title": "Animations des modals et popups",
+            "description": "Intégrer les animations dans les modals et popups",
+            "details": "Améliorer les composants de dialogue avec:\n- Animations d'entrée/sortie des modals\n- Transitions pour les changements d'état (ouvert/fermé)\n- Effets d'overlay animés\n- Feedback visuel pour les actions dans les modals\n- Animations pour les tooltips et popups\n- Intégration avec les hooks personnalisés du store Zustand",
+            "status": "done",
+            "dependencies": [
+              1,
+              8
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 13,
+            "title": "Animations du système de notifications",
+            "description": "Intégrer les animations dans le système de notifications",
+            "details": "Améliorer le système de notifications avec:\n- Animations d'entrée/sortie des notifications\n- File d'attente animée pour notifications multiples\n- Effets visuels selon le type (info, succès, erreur, warning)\n- Transitions pour les actions sur notifications (dismiss, action)\n- Timer visuel animé pour auto-dismiss\n- Utilisation des hooks d'animation du store Zustand",
+            "status": "done",
+            "dependencies": [
+              1,
+              8
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 14,
+            "title": "Tests de performance des animations",
+            "description": "Tester les performances des animations",
+            "details": "Vérifier les performances des animations:\n- Mesurer l'impact sur les FPS\n- Tester sur différents appareils (desktop, mobile, faible puissance)\n- Optimiser les animations gourmandes en ressources\n- Implémenter des fallbacks pour les animations complexes\n- S'assurer que l'option de mouvement réduit est respectée\n- Documenter les résultats des tests de performance",
+            "status": "done",
+            "dependencies": [
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parentTaskId": 6
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Optimisations Performances",
+        "description": "Optimiser les performances globales de l'application",
+        "status": "in-progress",
+        "priority": "medium",
+        "details": "Optimiser :\n- Lazy loading images 360°\n- Code splitting composants\n- Memoisation React\n- Compression Socket.io\n- Bundle size analyse",
+        "dependencies": [
+          6
+        ],
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Analyse initiale des performances",
+            "description": "Effectuer une analyse initiale avec Lighthouse et WebPageTest pour établir les métriques de base",
+            "details": "Réaliser une analyse complète des performances avec les outils suivants :\n- Lighthouse (mobile et desktop)\n- WebPageTest\n- Chrome DevTools Performance\n- React Profiler\n\nCréer un rapport détaillé incluant :\n- Scores de performance (FCP, LCP, TTI, TBT, CLS)\n- Taille du bundle JavaScript\n- Temps de chargement des images\n- Temps de premier rendu\n- Performance des animations\n- Métriques de performance du WebSocket",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 2,
+            "title": "Optimisation des images panoramiques",
+            "description": "Implémenter le lazy loading des images panoramiques 360° et optimiser les formats d'images",
+            "details": "Optimisation des images panoramiques 360° :\n- Implémenter le lazy loading progressif des images 360°\n- Charger d'abord une version basse résolution puis la haute résolution\n- Convertir les images en formats optimisés (WebP, AVIF avec fallback)\n- Mettre en place un système de préchargement intelligent basé sur la direction du regard\n- Créer des versions adaptatives des images selon la taille de l'écran et la connexion\n- Mettre en cache les images déjà visitées\n- Compresser les images sans perte de qualité perceptible\n- Optimiser les métadonnées des images",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 3,
+            "title": "Code splitting et memoisation React",
+            "description": "Mettre en place le code splitting et la memoisation des composants React",
+            "details": "Optimisation React/Next.js :\n- Implémenter le code splitting via React.lazy et dynamic imports\n- Définir une stratégie de chargement pour les composants lourds\n- Utiliser React.memo pour les composants qui reçoivent souvent les mêmes props\n- Optimiser les hooks personnalisés avec useMemo et useCallback\n- Revoir les dépendances des useEffect pour éviter les re-renders\n- Implémenter une stratégie de virtualisation pour les listes longues\n- Optimiser les conditions de rendu dans les composants\n- Mettre en place des Suspense boundaries stratégiques\n- Revoir la structure des composants pour minimiser les re-renders en cascade",
+            "status": "in-progress",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 4,
+            "title": "Optimisation des communications Socket.io",
+            "description": "Optimiser les communications Socket.io avec compression et ajustements de configuration",
+            "details": "Optimisation Socket.io :\n- Implémenter la compression des données échangées (socket.io-msgpack-parser)\n- Optimiser la taille des payloads JSON en minifiant les noms de propriétés\n- Configurer les options de reconnexion pour une meilleure résilience\n- Mettre en place un système de buffering pour les messages non critiques\n- Optimiser la fréquence d'envoi des mises à jour en temps réel\n- Utiliser des événements ciblés plutôt que des broadcasts généraux\n- Implémenter un système de limitation de débit pour les événements fréquents\n- Optimiser la sérialisation/désérialisation des données\n- Mettre en place un monitoring des performances Socket.io",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 5,
+            "title": "Analyse et optimisation du bundle",
+            "description": "Analyser et optimiser la taille du bundle JavaScript",
+            "details": "Analyse et optimisation du bundle :\n- Configurer les outils d'analyse de bundle (next-bundle-analyzer)\n- Identifier les packages trop volumineux et les dépendances inutilisées\n- Optimiser les imports pour n'inclure que le code nécessaire\n- Remplacer les bibliothèques lourdes par des alternatives plus légères\n- Configurer correctement le tree shaking pour éliminer le code mort\n- Mettre en place une stratégie de splitting du bundle selon les routes\n- Optimiser les polyfills et les transformer en imports conditionnels\n- Revoir la configuration Webpack/SWC pour une meilleure optimisation\n- Mettre en place une stratégie de chargement différé des scripts non critiques",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 6,
+            "title": "Tests et validation des optimisations",
+            "description": "Tester et valider les optimisations de performance à chaque étape",
+            "details": "Tests et validation des optimisations :\n- Créer un script automatisé pour mesurer les performances avant/après chaque optimisation\n- Tester sur différents appareils (mobile bas de gamme, desktop, tablette)\n- Tester sous différentes conditions réseau (3G, 4G, WiFi)\n- Vérifier l'impact sur l'expérience utilisateur\n- Mesurer la consommation de ressources (CPU, mémoire)\n- Analyser les gains de performance pour chaque type d'optimisation\n- Vérifier la compatibilité avec les différents navigateurs\n- Documenter les résultats dans un rapport détaillé\n- Créer un tableau de bord de monitoring des performances",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 7,
+            "title": "Mise en cache et Service Worker",
+            "description": "Mettre en place des stratégies de mise en cache et Service Worker",
+            "details": "Mise en cache et Service Worker :\n- Implémenter une stratégie de mise en cache efficace pour les assets statiques\n- Configurer correctement les headers de cache pour tous les types de ressources\n- Mettre en place un Service Worker pour le mode hors ligne basique\n- Configurer le prefetching intelligent des ressources probables\n- Optimiser le cache local pour les données de jeu récurrentes\n- Mettre en place une stratégie de revalidation des ressources\n- Configurer la mise en cache des requêtes API quand approprié\n- Optimiser la gestion du localStorage/sessionStorage\n- Implémenter une stratégie de mise à jour progressive du Service Worker",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 8,
+            "title": "Optimisation SSR et SSG",
+            "description": "Optimiser le rendu côté serveur (SSR) et la génération statique (SSG)",
+            "details": "Optimisation SSR et SSG :\n- Analyser et optimiser les stratégies de rendu (SSR, SSG, ISR)\n- Minimiser le JavaScript envoyé au client pour le premier rendu\n- Optimiser l'hydration React pour réduire le Time to Interactive\n- Mettre en place le streaming SSR pour les pages complexes\n- Configurer la révalidation à la demande pour le contenu dynamique\n- Optimiser les Edge Functions pour les parties dynamiques critiques\n- Implémenter le partial hydration quand approprié\n- Configurer correctement les stratégies de mise en cache CDN\n- Optimiser les headers de réponse pour les différentes stratégies de rendu",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 9,
+            "title": "Rapport d'optimisation et documentation",
+            "description": "Créer un rapport complet d'optimisation et documentation",
+            "details": "Rapport et documentation :\n- Rédiger un rapport détaillé sur toutes les optimisations réalisées\n- Documenter les gains de performance pour chaque optimisation\n- Créer un guide de bonnes pratiques pour maintenir les performances\n- Mettre en place un tableau de bord de monitoring des performances\n- Documenter les compromis effectués (performance vs fonctionnalités)\n- Créer un guide de débogage des problèmes de performance\n- Documenter les seuils d'alerte pour les différentes métriques\n- Rédiger des recommandations pour les futures optimisations\n- Préparer une présentation des résultats et des gains obtenus",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Gestion d'Erreurs Avancée",
+        "description": "Implémenter une gestion d'erreurs robuste et user-friendly",
+        "status": "pending",
+        "priority": "medium",
+        "details": "Gérer :\n- Erreurs réseau Socket.io\n- Timeouts et reconnexions\n- Erreurs de validation\n- États d'erreur UI\n- Recovery automatique",
+        "dependencies": [
+          7
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Tests End-to-End",
+        "description": "Créer une suite de tests E2E complète",
+        "status": "pending",
+        "priority": "medium",
+        "details": "Tester :\n- Scénarios multi-utilisateurs\n- Création/gestion rooms\n- Jeu complet start-to-finish\n- Déconnexions/reconnexions\n- Cas d'erreur",
+        "dependencies": [
+          8
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Documentation Technique",
+        "description": "Créer une documentation technique complète",
+        "status": "pending",
+        "priority": "low",
+        "details": "Documenter :\n- Architecture et flux de données\n- API Socket.io events\n- Composants et hooks\n- Déploiement et configuration\n- Guide développeur",
+        "dependencies": [
+          9
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Persistance Scores - Base de Données",
+        "description": "Implémenter la persistance des scores avec base de données",
+        "status": "deferred",
+        "priority": "low",
+        "details": "Fonctionnalités futures :\n- Base de données PostgreSQL\n- ORM Prisma\n- API scores persistants\n- Historique parties\n- Classements globaux",
+        "dependencies": [
+          10
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Système d'Authentification",
+        "description": "Ajouter un système d'authentification utilisateur",
+        "status": "deferred",
+        "priority": "low",
+        "details": "Fonctionnalités futures :\n- Auth0 ou NextAuth.js\n- Comptes utilisateur\n- Profils et avatars\n- Amis et invitations\n- Parties privées",
+        "dependencies": [
+          11
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Configuration Production",
+        "description": "Préparer la configuration pour déploiement production",
+        "status": "deferred",
+        "priority": "medium",
+        "details": "Configuration :\n- Variables d'environnement\n- Optimisations build\n- Serveur production\n- SSL/HTTPS\n- Monitoring",
+        "dependencies": [
+          9
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "CI/CD Pipeline",
+        "description": "Mettre en place un pipeline CI/CD automatisé",
+        "status": "deferred",
+        "priority": "low",
+        "details": "Pipeline :\n- GitHub Actions\n- Tests automatisés\n- Build et déploiement\n- Environments staging/prod\n- Rollback automatique",
+        "dependencies": [
+          13
+        ],
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Monitoring et Analytics",
+        "description": "Implémenter monitoring et analytics en production",
+        "status": "deferred",
+        "priority": "low",
+        "details": "Monitoring :\n- Logs structurés\n- Métriques performance\n- Alertes erreurs\n- Analytics utilisateur\n- Dashboard monitoring",
+        "dependencies": [
+          14
+        ],
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "projectName": "GameGuessr Migration Next.js",
+      "description": "Migration complète vers Next.js avec synchronisation temps réel",
+      "createdAt": "2025-07-02T12:00:00.000Z",
+      "tags": {
+        "master": {
+          "name": "master",
+          "description": "Branche principale de développement",
+          "createdAt": "2025-07-02T12:00:00.000Z"
+        }
+      },
+      "currentTag": "master",
+      "created": "2025-07-02T12:11:27.244Z",
+      "updated": "2025-07-02T19:36:47.932Z"
+    }
+  }
+}

@@ -1,0 +1,220 @@
+# GameGuessr - Product Requirements Document (PRD)
+
+## 1. Vue d'ensemble du projet
+
+**Nom**: GameGuessr - Migration Next.js avec Synchronisation Temps Réel
+**Version**: 2.0 (Migration complète)
+**Date**: Juillet 2025
+
+### Description
+Migration complète de GameGuessr d'une architecture Express/Socket.io basique vers une application Next.js 14 moderne avec TypeScript, synchronisation temps réel Socket.io avancée, gestion d'état Zustand, et interface utilisateur moderne responsive.
+
+### Objectifs principaux
+- Moderniser l'architecture technique (Express → Next.js 14 + TypeScript)
+- Implémenter une synchronisation temps réel robuste multi-room
+- Créer une interface utilisateur moderne et responsive
+- Optimiser les performances et la scalabilité
+- Préparer pour déploiement production
+
+## 2. État actuel et contexte
+
+### Code legacy analysé
+- `index.js` - Serveur Express basique avec Socket.io
+- `game.html` - Interface client basique
+- `js/game.js` - Logique client JavaScript vanilla
+- `res/json/game.json` - Données d'images 360° (12 images cyberpunk)
+
+### Architecture cible
+- **Frontend**: Next.js 14 + TypeScript + Tailwind CSS
+- **Backend**: Serveur Socket.io custom intégré Next.js
+- **État global**: Zustand avec hooks optimisés
+- **UI**: Composants React modernes + Framer Motion
+- **Maps**: Leaflet pour géolocalisation
+- **3D**: Three.js pour vues panoramiques 360°
+
+## 3. Fonctionnalités principales
+
+### 3.1 Système de Rooms Multi-Joueurs
+- Création de rooms publiques/privées
+- Gestion des permissions (admin/player)
+- Capacité jusqu'à 50 joueurs par room
+- Système d'invitations par code
+
+### 3.2 Jeu de Géolocalisation
+- Affichage d'images panoramiques 360° (Cyberpunk 2077)
+- Interface de devinette (nom du lieu)
+- Carte interactive Leaflet pour sélection coordonnées
+- Système de scoring basé sur précision géographique
+
+### 3.3 Synchronisation Temps Réel
+- Timer synchronisé multi-room (côté serveur)
+- Transition automatique d'images
+- Chat temps réel par room
+- États de jeu synchronisés (wait/playing/end)
+- Contrôles administrateur temps réel
+
+### 3.4 Interface Utilisateur Moderne
+- Design responsive mobile-first
+- Animations fluides (Framer Motion)
+- Feedback utilisateur avancé
+- Interface admin contextuelle
+- Thème sombre/cyberpunk
+
+### 3.5 Gestion des Scores et Statistiques
+- Calcul de points basé sur précision + temps
+- Classement temps réel
+- Historique des parties
+- Statistiques joueurs
+
+## 4. Spécifications techniques
+
+### 4.1 Stack technique
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript strict
+- **Styling**: Tailwind CSS + CSS Modules
+- **État**: Zustand + React hooks
+- **Temps réel**: Socket.io client/serveur
+- **Maps**: Leaflet + React-Leaflet
+- **3D**: Three.js + React-Three-Fiber
+- **Animation**: Framer Motion
+- **UI**: Headless UI + Lucide Icons
+
+### 4.2 Architecture Socket.io
+- Events typés TypeScript
+- Gestion multi-room indépendante
+- Timer serveur haute précision (1000ms)
+- Nettoyage automatique ressources
+- Gestion déconnexions/reconnexions
+
+### 4.3 Performance
+- Lazy loading composants/images
+- Memoisation React optimisée
+- Compression Socket.io
+- Code splitting automatique Next.js
+
+## 5. Phases de développement
+
+### Phase 1: Configuration et Architecture (COMPLÉTÉE)
+- ✅ Initialisation Next.js 14 + TypeScript
+- ✅ Installation dépendances
+- ✅ Structure de projet moderne
+- ✅ Configuration TypeScript/ESLint
+
+### Phase 2: Migration Backend (COMPLÉTÉE)
+- ✅ Serveur Socket.io custom
+- ✅ API Routes Next.js
+- ✅ Gestion rooms/users
+- ✅ Types TypeScript complets
+
+### Phase 3: Interface Utilisateur (COMPLÉTÉE)
+- ✅ Composants React modernes
+- ✅ Layout responsive
+- ✅ PanoramaViewer 360°
+- ✅ GameMap Leaflet
+- ✅ Chat interface
+- ✅ Store Zustand
+
+### Phase 4: Synchronisation Temps Réel (COMPLÉTÉE)
+- ✅ Timer multi-room synchronisé
+- ✅ Transition automatique images
+- ✅ Contrôles admin temps réel
+- ✅ Chat multi-room avancé
+- ✅ Gestion états de jeu robuste
+
+### Phase 5: Polish et Optimisations (EN COURS)
+- 🔄 Tests multi-room robustesse
+- 🔄 Animations et feedback UX
+- 🔄 Optimisations performances
+- 🔄 Gestion erreurs avancée
+- 🔄 Documentation technique
+
+### Phase 6: Fonctionnalités Avancées
+- 📋 Persistance scores (base de données)
+- 📋 Système d'authentification
+- 📋 Statistiques avancées
+- 📋 Classements globaux
+- 📋 Replays de parties
+
+### Phase 7: Déploiement Production
+- 📋 Configuration serveur production
+- 📋 Variables d'environnement
+- 📋 Monitoring et logs
+- 📋 CI/CD Pipeline
+- 📋 Tests de charge
+
+## 6. Critères d'acceptation
+
+### 6.1 Performance
+- Latence Socket.io < 100ms
+- Temps de chargement initial < 3s
+- Synchronisation timer précision ±50ms
+- Support 10+ rooms simultanées
+
+### 6.2 UX/UI
+- Design responsive tous écrans
+- Animations fluides 60fps
+- Feedback utilisateur immédiat
+- Interface intuitive
+
+### 6.3 Robustesse
+- Gestion déconnexions gracieuse
+- Nettoyage automatique ressources
+- Récupération d'erreurs
+- Tests multi-utilisateurs validés
+
+### 6.4 Code Quality
+- Coverage tests > 80%
+- Types TypeScript strict
+- Documentation technique complète
+- Code review validé
+
+## 7. Risques et mitigation
+
+### 7.1 Risques techniques
+- **Latence Socket.io**: Optimisation events, compression
+- **Synchronisation timer**: Implémentation côté serveur
+- **Scalabilité**: Architecture multi-room indépendante
+- **Performance 3D**: Lazy loading, optimisation Three.js
+
+### 7.2 Risques UX
+- **Complexité interface**: Tests utilisateurs itératifs
+- **Responsive mobile**: Design mobile-first
+- **Accessibilité**: Standards WCAG respect
+
+## 8. Timeline et ressources
+
+### Estimation globale: 8-12 semaines
+- Phase 1-4: ✅ COMPLÉTÉES (6 semaines)
+- Phase 5: 🔄 EN COURS (2 semaines)
+- Phase 6: 📋 À VENIR (2-3 semaines)
+- Phase 7: 📋 À VENIR (1-2 semaines)
+
+### Ressources
+- 1 développeur fullstack senior
+- Outils: Next.js, TypeScript, Socket.io, Tailwind
+- Infrastructure: Node.js, PostgreSQL (futur)
+
+## 9. Métriques de succès
+
+### 9.1 Techniques
+- Temps de réponse API < 200ms
+- Synchronisation timer < 100ms latence
+- 0 memory leaks détectés
+- Tests e2e 100% passants
+
+### 9.2 Utilisateur
+- Interface moderne et intuitive
+- Jeu fluide multi-room
+- Chat temps réel fonctionnel
+- Contrôles admin efficaces
+
+### 9.3 Business
+- Migration réussie sans régression
+- Architecture scalable et maintenable
+- Documentation technique complète
+- Prêt déploiement production
+
+---
+
+**Status actuel**: Phase 4 complétée à 100%, Phase 5 en cours
+**Prochaine milestone**: Tests robustesse et optimisations UX
