@@ -1,5 +1,13 @@
 import { User as StoreUser, Room as StoreRoom, GameState as StoreGameState } from '@/store/gameStore';
 
+// Type pour les données de jeu
+export interface GameData {
+  image: string;
+  game: string[];
+  map: [number, number, [string, string]];
+  location: [number, number];
+}
+
 // Types communs
 interface BaseUser {
   id: string;
@@ -13,6 +21,12 @@ export interface ServerUser extends BaseUser {
   socketId: string;
   score: number;
   status: 'active' | 'inactive' | 'away';
+}
+
+// Type utilisateur dans une room (hérite de ServerUser avec des propriétés de jeu)
+export interface RoomUser extends ServerUser {
+  alive?: boolean;
+  gameStatus?: boolean; // status du jeu (différent de connection status)
 }
 
 // Type utilisateur côté store (client)
@@ -30,27 +44,35 @@ interface BaseRoom {
 
 // Type room côté serveur
 export interface ServerRoom extends BaseRoom {
-  users: Record<string, ServerUser>;
+  users: Record<string, RoomUser>;
   status: 'waiting' | 'playing' | 'finished';
   currentRound: number;
   maxRounds: number;
   timeLimit: number;
+  gameDB?: GameData[];
+  gameState?: 'waiting' | 'playing' | 'end';
+  duration?: number;
+  difficulty?: string;
+  privacy?: string;
 }
 
 // Type room côté store (client)
 export interface Room extends BaseRoom {
   users: User[];
-  gameState?: {
-    status: 'waiting' | 'playing' | 'finished';
-    currentRound: number;
-    totalRounds: number;
-    timeLeft?: number;
-    scores: Record<string, number>;
-    currentLocation?: {
-      lat: number;
-      lng: number;
-      panoramaUrl: string;
-    };
+  gameState?: GameState;
+}
+
+// Type pour l'état du jeu
+export interface GameState {
+  status: 'waiting' | 'playing' | 'finished';
+  currentRound: number;
+  totalRounds: number;
+  timeLeft?: number;
+  scores: Record<string, number>;
+  currentLocation?: {
+    lat: number;
+    lng: number;
+    panoramaUrl: string;
   };
 }
 

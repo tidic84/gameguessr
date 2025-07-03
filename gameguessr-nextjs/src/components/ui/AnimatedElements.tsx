@@ -23,6 +23,7 @@ export const AnimatedBadge: React.FC<AnimatedBadgeProps> = ({
       return () => clearTimeout(timer);
     } else {
       setPrevCount(count);
+      return () => {}; // Return une fonction vide
     }
   }, [count, prevCount]);
 

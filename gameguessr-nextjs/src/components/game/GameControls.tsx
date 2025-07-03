@@ -31,7 +31,7 @@ export const GameControls: React.FC = () => {
   }
 
   const userCount = Object.keys(roomUsers).length;
-  const gameState = currentRoom.gameState;
+  const gameState = currentRoom.gameState?.status || 'waiting';
 
   const handleAction = async (action: () => void, actionName: string) => {
     setIsLoading(true);
@@ -62,18 +62,18 @@ export const GameControls: React.FC = () => {
 
   const getGameStateColor = () => {
     switch (gameState) {
-      case 'wait': return 'text-yellow-600';
+      case 'waiting': return 'text-yellow-600';
       case 'playing': return 'text-green-600';
-      case 'end': return 'text-blue-600';
+      case 'finished': return 'text-blue-600';
       default: return 'text-gray-600';
     }
   };
 
   const getGameStateText = () => {
     switch (gameState) {
-      case 'wait': return 'En attente';
+      case 'waiting': return 'En attente';
       case 'playing': return 'En cours';
-      case 'end': return 'Terminé';
+      case 'finished': return 'Terminé';
       default: return gameState;
     }
   };
@@ -132,7 +132,7 @@ export const GameControls: React.FC = () => {
       </div>
 
       {/* Warning si pas assez de joueurs */}
-      {userCount < 2 && gameState === 'wait' && (
+      {userCount < 2 && gameState === 'waiting' && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -148,7 +148,7 @@ export const GameControls: React.FC = () => {
       {/* Contrôles */}
       <div className="flex flex-wrap gap-2">
         <AnimatePresence mode="wait">
-          {gameState === 'wait' && (
+          {gameState === 'waiting' && (
             <motion.div
               key="start"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -197,7 +197,7 @@ export const GameControls: React.FC = () => {
             </motion.div>
           )}
 
-          {(gameState === 'end' || gameState.includes('end')) && (
+          {gameState === 'finished' && (
             <motion.div
               key="end"
               initial={{ opacity: 0, scale: 0.9 }}

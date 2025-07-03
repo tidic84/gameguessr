@@ -28,9 +28,7 @@ export default function Popup({
   autoCloseDelay = 5000
 }: PopupProps) {
   const [mounted, setMounted] = useState(false);
-  const { triggerAnimation } = useGameActions();
-  const { animationState } = useGameStore();
-  const { reducedMotion } = animationState.animationSettings;
+  const reducedMotion = false; // Simplifié
   
   useEffect(() => {
     setMounted(true);
@@ -38,18 +36,15 @@ export default function Popup({
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      triggerAnimation('popup-open');
+    if (isOpen && autoClose) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, autoCloseDelay);
       
-      if (autoClose) {
-        const timer = setTimeout(() => {
-          onClose();
-        }, autoCloseDelay);
-        
-        return () => clearTimeout(timer);
-      }
+      return () => clearTimeout(timer);
     }
-  }, [isOpen, autoClose, autoCloseDelay, onClose, triggerAnimation]);
+    return () => {};
+  }, [isOpen, autoClose, autoCloseDelay, onClose]);
 
   if (!mounted) return null;
 

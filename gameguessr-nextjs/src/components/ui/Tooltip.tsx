@@ -31,8 +31,7 @@ export default function Tooltip({
   const tooltipRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   
-  const { animationState } = useGameStore();
-  const { reducedMotion } = animationState.animationSettings;
+  const reducedMotion = false; // Simplifié
 
   // Pas de rendu côté serveur
   useEffect(() => {
@@ -105,6 +104,7 @@ export default function Tooltip({
         window.removeEventListener('scroll', updatePosition);
       };
     }
+    return () => {}; // Return une fonction vide si pas visible
   }, [isVisible]);
 
   if (!mounted) return <>{children}</>;

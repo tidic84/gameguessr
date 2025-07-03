@@ -37,9 +37,7 @@ export default function Modal({
   children
 }: ModalProps) {
   const [mounted, setMounted] = useState(false);
-  const { triggerAnimation, resetAnimationTrigger } = useGameActions();
-  const { animationState } = useGameStore();
-  const { reducedMotion } = animationState.animationSettings;
+  const reducedMotion = false; // Simplifié
   
   useEffect(() => {
     setMounted(true);
@@ -47,10 +45,6 @@ export default function Modal({
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      triggerAnimation('modal-open');
-    }
-    
     const handleEsc = (e: KeyboardEvent) => {
       if (closeOnEsc && isOpen && e.key === 'Escape') {
         onClose();
@@ -60,9 +54,8 @@ export default function Modal({
     window.addEventListener('keydown', handleEsc);
     return () => {
       window.removeEventListener('keydown', handleEsc);
-      resetAnimationTrigger('modal-open');
     };
-  }, [isOpen, closeOnEsc, onClose, triggerAnimation, resetAnimationTrigger]);
+  }, [isOpen, closeOnEsc, onClose]);
 
   // Ne rien rendre côté serveur
   if (!mounted) return null;
@@ -99,157 +92,6 @@ export default function Modal({
               duration: reducedMotion ? DURATIONS.fast : DURATIONS.normal,
               ease: EASINGS.smooth
             }}
-          >
-            {/* Modal */}
-            <motion.div
-              className={`bg-gray-900 border border-white/20 shadow-2xl m-4 ${sizeClasses[size]} ${className}`}
-              onClick={(e) => e.stopPropagation()}
-              variants={modalAnimation}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={{
-                duration: reducedMotion ? DURATIONS.fast : DURATIONS.normal,
-                ease: EASINGS.smooth
-              }}
-              style={{ 
-                borderRadius: size === 'full' ? '0' : '0.75rem',
-                overflow: 'hidden'
-              }}
-            >
-              {/* Header */}
-              {title && (
-                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
-                  <h2 className="text-lg font-bold text-white truncate">{title}</h2>
-                  {!hideCloseButton && (
-                    <button
-                      onClick={onClose}
-                      className="text-white/60 hover:text-white transition-colors rounded-full p-1 hover:bg-white/10"
-                      aria-label="Fermer"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {/* Content */}
-              <div className={`p-4 sm:p-6 ${!title ? 'pt-10' : ''}`}>
-                {!title && !hideCloseButton && (
-                  <button
-                    onClick={onClose}
-                    className="absolute top-3 right-3 text-white/60 hover:text-white transition-colors rounded-full p-1 hover:bg-white/10"
-                    aria-label="Fermer"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
-                {children}
-              </div>
-
-              {/* Footer */}
-              {showFooter && (
-                <motion.div 
-                  className="p-4 sm:p-6 border-t border-white/10 bg-gray-800/50"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  {footerContent || (
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        onClick={onClose}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        Fermer
-                      </Button>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </motion.div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
-}
-            {/* Modal */}
-            <motion.div
-              className={`bg-gray-900 border border-white/20 shadow-2xl m-4 ${sizeClasses[size]} ${className}`}
-              onClick={(e) => e.stopPropagation()}
-              variants={modalAnimation}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={{
-                duration: reducedMotion ? DURATIONS.fast : DURATIONS.normal,
-                ease: EASINGS.smooth
-              }}
-              style={{ 
-                borderRadius: size === 'full' ? '0' : '0.75rem',
-                overflow: 'hidden'
-              }}
-            >
-              {/* Header */}
-              {title && (
-                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
-                  <h2 className="text-lg font-bold text-white truncate">{title}</h2>
-                  {!hideCloseButton && (
-                    <button
-                      onClick={onClose}
-                      className="text-white/60 hover:text-white transition-colors rounded-full p-1 hover:bg-white/10"
-                      aria-label="Fermer"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {/* Content */}
-              <div className={`p-4 sm:p-6 ${!title ? 'pt-10' : ''}`}>
-                {!title && !hideCloseButton && (
-                  <button
-                    onClick={onClose}
-                    className="absolute top-3 right-3 text-white/60 hover:text-white transition-colors rounded-full p-1 hover:bg-white/10"
-                    aria-label="Fermer"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
-                {children}
-              </div>
-
-              {/* Footer */}
-              {showFooter && (
-                <motion.div 
-                  className="p-4 sm:p-6 border-t border-white/10 bg-gray-800/50"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  {footerContent || (
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        onClick={onClose}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        Fermer
-                      </Button>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </motion.div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
-}
           >
             {/* Modal */}
             <motion.div

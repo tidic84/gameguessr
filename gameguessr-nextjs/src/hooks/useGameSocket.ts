@@ -9,11 +9,7 @@ export const useGameSocket = (roomCode: string) => {
   const {
     addUserMessage,
     addSystemMessage,
-    addGameMessage,
-    updateRoomUsers,
-    setGameActive,
-    updateGameState,
-    batchUpdateGameState,
+    updateRoomUsers
   } = useGameStore();
 
   // Initialisation de la connexion
@@ -38,7 +34,7 @@ export const useGameSocket = (roomCode: string) => {
     // Gestionnaires d'événements optimisés
     socket.on('connect', () => {
       console.log('Connected to game server');
-      addSystemMessage(roomCode, 'Connecté au serveur de jeu', 'game_start');
+      addSystemMessage(roomCode, 'Connecté au serveur de jeu', 'info');
     });
 
     socket.on('disconnect', (reason) => {
@@ -54,15 +50,12 @@ export const useGameSocket = (roomCode: string) => {
     });
 
     socket.on('reconnect', () => {
-      addSystemMessage(roomCode, 'Reconnecté au serveur', 'announcement');
+      addSystemMessage(roomCode, 'Reconnecté au serveur', 'info');
     });
 
-    // Événements de jeu en lot
+    // Événements de jeu en lot - simplifié pour le moment
     socket.on('game_state_batch', (states: any[]) => {
-      batchUpdateGameState(states.reduce((acc, state) => ({
-        ...acc,
-        ...state,
-      }), {}));
+      console.log('Game state batch received:', states);
     });
 
     // Nettoyage à la déconnexion

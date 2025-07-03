@@ -9,8 +9,9 @@ import type {
   ServerToClientEvents,
   ClientToServerEvents,
   ServerUser,
+  RoomUser,
   ServerRoom
-} from './src/types/server';
+} from './src/types';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -56,10 +57,11 @@ app.prepare().then(() => {
       console.log(`Création utilisateur: ${username} (${userId})`);
       users[userId] = {
         id: userId,
-        name: username,
+        username: username,
         socketId: socket.id,
         score: 0,
-        status: 'active'
+        status: 'active',
+        isAuthenticated: true
       };
     });
 
@@ -73,7 +75,7 @@ app.prepare().then(() => {
         return;
       }
 
-      const room: Room = {
+      const room: ServerRoom = {
         code,
         name,
         owner,
@@ -108,7 +110,7 @@ app.prepare().then(() => {
         return;
       }
 
-      const userId = Object.keys(users).find(id => users[id].socketId === socket.id);
+      const userId = Object.keys(users).find(id => users[id]?.socketId === socket.id);
       if (!userId || !users[userId]) {
         socket.emit('error', { message: 'Utilisateur non authentifié' });
         return;
@@ -155,7 +157,7 @@ app.prepare().then(() => {
 
     // Créer une room
     socket.on('room create', (roomData) => {
-      const room: Room = {
+      const room: ServerRoom = {
         code: roomData.code,
         name: roomData.name,
         owner: roomData.owner,

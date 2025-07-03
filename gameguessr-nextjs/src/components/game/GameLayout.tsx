@@ -33,8 +33,8 @@ export default function GameLayout({ roomCode }: GameLayoutProps) {
 
   if (!currentRoom || !user) return null;
 
-  const players = Object.entries(currentRoom.users || {});
-  const currentImage = currentRoom.gameData?.images?.[currentImageIndex] || { 
+  const players = currentRoom.users || [];
+  const currentImage = { 
     url: '/images/cp1.jpg', 
     id: 'demo' 
   };
@@ -61,7 +61,7 @@ export default function GameLayout({ roomCode }: GameLayoutProps) {
               <h1 className="text-white font-bold text-xl">{currentRoom.name}</h1>
               
               <GameTimer
-                totalTime={currentRoom.duration}
+                totalTime={120}
                 timeLeft={timeLeft}
                 isActive={isGameActive}
                 onTimeUp={() => {
@@ -73,7 +73,7 @@ export default function GameLayout({ roomCode }: GameLayoutProps) {
               <div className="flex items-center space-x-2 text-white/80">
                 <Star className="w-5 h-5" />
                 <span>
-                  Image {currentImageIndex + 1} / {currentRoom.gameData?.images?.length || 5}
+                  Image {currentImageIndex + 1} / 5
                 </span>
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function GameLayout({ roomCode }: GameLayoutProps) {
                 <span>{players.length} joueurs</span>
               </div>
               <div className="text-white font-bold">
-                {user.points || 0} pts
+                0 pts
               </div>
             </div>
           </div>

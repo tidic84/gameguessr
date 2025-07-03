@@ -137,8 +137,8 @@ export const useAnimationOptimization = () => {
     prefersReducedMotion: false
   });
   
-  const { setAnimationSettings } = useGameStore(state => ({
-    setAnimationSettings: state.setAnimationSettings
+  const { updateAnimationSettings } = useGameStore(state => ({
+    updateAnimationSettings: state.updateAnimationSettings
   }));
   
   // Fonction pour analyser les performances et définir le niveau d'optimisation
@@ -166,7 +166,7 @@ export const useAnimationOptimization = () => {
     });
     
     // Appliquer les paramètres d'animation en fonction du niveau d'optimisation
-    applyOptimizationSettings(optimizationLevel, setAnimationSettings);
+    applyOptimizationSettings(optimizationLevel, updateAnimationSettings);
     
     // Enregistrer les paramètres pour le debug
     console.log('Animation Performance Analysis:', {
@@ -177,7 +177,7 @@ export const useAnimationOptimization = () => {
     });
     
     return { fps, optimizationLevel, isLowPowerDevice, prefersReducedMotion };
-  }, [setAnimationSettings]);
+  }, [updateAnimationSettings]);
   
   // Appliquer les optimisations au démarrage
   useEffect(() => {
@@ -220,12 +220,12 @@ export const useAnimationOptimization = () => {
 // Fonction pour appliquer les paramètres d'optimisation aux animations
 const applyOptimizationSettings = (
   level: OptimizationLevel,
-  setAnimationSettings: (settings: any) => void
+  updateAnimationSettings: (settings: any) => void
 ) => {
   switch (level) {
     case OptimizationLevel.HEAVY:
       // Optimisations importantes - presque pas d'animations
-      setAnimationSettings({
+      updateAnimationSettings({
         globalEnabled: true,
         reducedMotion: true,
         duration: {
@@ -238,7 +238,7 @@ const applyOptimizationSettings = (
       
     case OptimizationLevel.MODERATE:
       // Optimisations modérées - animations simplifiées et plus rapides
-      setAnimationSettings({
+      updateAnimationSettings({
         globalEnabled: true,
         reducedMotion: false,
         duration: {
@@ -251,7 +251,7 @@ const applyOptimizationSettings = (
       
     case OptimizationLevel.LIGHT:
       // Optimisations légères - animations légèrement réduites
-      setAnimationSettings({
+      updateAnimationSettings({
         globalEnabled: true,
         reducedMotion: false,
         duration: {
@@ -265,7 +265,7 @@ const applyOptimizationSettings = (
     case OptimizationLevel.NONE:
     default:
       // Aucune optimisation - animations complètes
-      setAnimationSettings({
+      updateAnimationSettings({
         globalEnabled: true,
         reducedMotion: false,
         duration: {

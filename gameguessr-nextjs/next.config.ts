@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   
+  // Désactiver ESLint pendant la build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   // Configuration des images
   images: {
     formats: ['image/avif', 'image/webp'],

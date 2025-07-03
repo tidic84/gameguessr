@@ -1,69 +1,43 @@
+'use client';
+
 import { memo, Suspense, lazy } from 'react';
-import dynamic from 'next/dynamic';
-import { useStore } from '@/store/gameStore';
+import { useGameStore } from '@/store/gameStore';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 // Code splitting avec lazy loading des composants principaux
-const PanoramaViewer = lazy(() => import('./PanoramaViewer'));
-const Chat = lazy(() => import('./Chat'));
-const ScoreBoard = lazy(() => import('./ScoreBoard'));
-
-// Le composant Map doit être chargé dynamiquement à cause de leaflet
-const GameMap = dynamic(() => import('./GameMap'), {
-  loading: () => <LoadingSpinner />,
-  ssr: false
-});
+const Chat = lazy(() => import('../chat/Chat'));
 
 interface GameRoomProps {
   roomCode: string;
 }
 
 const GameRoom = memo(({ roomCode }: GameRoomProps) => {
-  const {
-    gameState,
-    currentImage,
-    handleLocationSelect,
-    handleSendMessage,
-    correctLocation,
-    isMapSelectable
-  } = useStore((state) => ({
-    gameState: state.gameState,
-    currentImage: state.currentImage,
-    handleLocationSelect: state.handleLocationSelect,
-    handleSendMessage: state.handleSendMessage,
-    correctLocation: state.correctLocation,
-    isMapSelectable: state.isMapSelectable
-  }));
+  const currentRoom = useGameStore((state) => state.currentRoom);
+
+  if (!currentRoom) {
+    return <LoadingSpinner />;
+  }
 
   return (
-    <div className="game-room">
-      <div className="game-area">
-        <Suspense fallback={<LoadingSpinner />}>
-          <PanoramaViewer 
-            imageUrl={currentImage} 
-          />
-        </Suspense>
+    <div className="game-room min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
+      <div className="max-w-7xl mx-auto p-4">
+        <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6">
+          <h1 className="text-2xl font-bold text-white mb-4">Salle de jeu: {currentRoom.name}</h1>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Zone de jeu principale */}
+            <div className="bg-black/20 rounded-lg p-4">
+              <p className="text-white/80">Zone de jeu - À implémenter</p>
+            </div>
 
-        <Suspense fallback={<LoadingSpinner />}>
-          <GameMap
-            onLocationSelect={handleLocationSelect}
-            correctLocation={correctLocation}
-            isSelectable={isMapSelectable}
-          />
-        </Suspense>
-      </div>
-
-      <div className="side-panel">
-        <Suspense fallback={<LoadingSpinner />}>
-          <ScoreBoard roomCode={roomCode} />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Chat 
-            roomCode={roomCode}
-            onSendMessage={handleSendMessage}
-          />
-        </Suspense>
+            {/* Chat */}
+            <div className="bg-black/20 rounded-lg overflow-hidden">
+              <Suspense fallback={<LoadingSpinner />}>
+                <Chat roomCode={roomCode} />
+              </Suspense>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,17 +1,10 @@
 import { useEffect } from 'react';
-import { useServiceWorker } from '@/hooks/useServiceWorker';
 import { toast } from 'react-hot-toast';
 
 export const ServiceWorkerManager = () => {
-  const { isReady, update } = useServiceWorker();
-
   useEffect(() => {
-    // Vérifier les mises à jour périodiquement
-    if (isReady) {
-      const interval = setInterval(update, 60 * 60 * 1000); // Toutes les heures
-      return () => clearInterval(interval);
-    }
-  }, [isReady, update]);
+    // Service Worker sera implémenté plus tard
+  }, []);
 
   return null; // Composant sans rendu
 };

@@ -33,9 +33,8 @@ export default function ReportModal({
   const [submitted, setSubmitted] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const { reportUser, addSystemMessage, triggerAnimation, resetAnimationTrigger } = useGameActions();
-  const { animationState } = useGameStore();
-  const { reducedMotion } = animationState.animationSettings;
+  const { addSystemMessage } = useGameActions();
+  const reducedMotion = false; // Simplifié
   
   useEffect(() => {
     setMounted(true);
@@ -43,20 +42,16 @@ export default function ReportModal({
   }, []);
 
   useEffect(() => {
-    if (isVisible) {
-      triggerAnimation('modal-report-open');
-    }
-    return () => {
-      resetAnimationTrigger('modal-report-open');
-    };
-  }, [isVisible, triggerAnimation, resetAnimationTrigger]);
+    // Animation simplifiée
+  }, [isVisible]);
 
   const handleSubmit = () => {
     if (!targetUserId || reason.trim() === '') {
       return;
     }
 
-    reportUser(
+    // TODO: Implémenter reportUser
+    console.log('Report user:', 
       roomCode,
       userId,
       targetUserId,

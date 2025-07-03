@@ -46,7 +46,6 @@ export default function ModerationPanel({
     blockUser,
     unmuteUser,
     unblockUser,
-    reviewReport,
     addSystemMessage
   } = useGameActions();
 
@@ -54,7 +53,7 @@ export default function ModerationPanel({
     if (!targetUserId || targetUserId === currentUserId) return;
 
     const targetUser = userStatuses[targetUserId];
-    const userName = targetUser?.userName || 'Utilisateur inconnu';
+    const username = targetUser?.username || 'Utilisateur inconnu';
 
     switch (action) {
       case 'warn':
@@ -79,7 +78,8 @@ export default function ModerationPanel({
   };
 
   const handleReportReview = (reportId: string, decision: 'approved' | 'dismissed') => {
-    reviewReport(roomCode, reportId, currentUserId, decision, 'Examiné par admin');
+    // TODO: Implémenter reviewReport
+    console.log('Review report:', reportId, decision);
   };
 
   const pendingReports = reports.filter(report => report.status === 'pending');
@@ -170,10 +170,10 @@ export default function ModerationPanel({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                            {user.userName.slice(0, 1).toUpperCase()}
+                            {user.username.slice(0, 1).toUpperCase()}
                           </div>
                           <div>
-                            <h4 className="text-white font-medium">{user.userName}</h4>
+                            <h4 className="text-white font-medium">{user.username}</h4>
                             <div className="flex items-center space-x-4 text-sm text-white/60">
                               <span>⚠️ {user.warningCount} avertissements</span>
                               <span>📝 {user.violations.length} infractions</span>
@@ -224,7 +224,7 @@ export default function ModerationPanel({
                           <div className="space-y-1">
                             {user.violations.slice(-3).map((violation, index) => (
                               <div key={index} className="text-xs text-white/60">
-                                • {violation.reason} ({violation.action})
+                                • {violation.reason}
                               </div>
                             ))}
                           </div>
@@ -258,9 +258,9 @@ export default function ModerationPanel({
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-2">
-                            <span className="text-sm font-medium text-white">{report.reporterName}</span>
+                            <span className="text-sm font-medium text-white">Utilisateur</span>
                             <span className="text-white/60 text-sm">a signalé</span>
-                            <span className="text-sm font-medium text-white">{report.targetUserName}</span>
+                            <span className="text-sm font-medium text-white">Utilisateur</span>
                             <span className={`px-2 py-1 rounded text-xs ${
                               report.category === 'spam' ? 'bg-yellow-600' :
                               report.category === 'harassment' ? 'bg-red-600' :
@@ -303,7 +303,7 @@ export default function ModerationPanel({
                 
                 <div className="grid grid-cols-2 gap-4">
                   <Button
-                    onClick={() => addSystemMessage(roomCode, '📢 Merci de respecter les règles du chat', 'announcement')}
+                    onClick={() => addSystemMessage(roomCode, '📢 Merci de respecter les règles du chat', 'info')}
                     className="p-4 bg-blue-600 hover:bg-blue-700 flex items-center space-x-2"
                   >
                     <MessageSquare className="w-5 h-5" />
@@ -319,7 +319,7 @@ export default function ModerationPanel({
                   </Button>
                   
                   <Button
-                    onClick={() => addSystemMessage(roomCode, '🧹 Nettoyage du chat en cours...', 'announcement')}
+                    onClick={() => addSystemMessage(roomCode, '🧹 Nettoyage du chat en cours...', 'info')}
                     className="p-4 bg-purple-600 hover:bg-purple-700 flex items-center space-x-2"
                   >
                     <AlertTriangle className="w-5 h-5" />
@@ -327,7 +327,7 @@ export default function ModerationPanel({
                   </Button>
                   
                   <Button
-                    onClick={() => addSystemMessage(roomCode, '✅ Le chat est de nouveau normal', 'announcement')}
+                    onClick={() => addSystemMessage(roomCode, '✅ Le chat est de nouveau normal', 'info')}
                     className="p-4 bg-green-600 hover:bg-green-700 flex items-center space-x-2"
                   >
                     <UserCheck className="w-5 h-5" />

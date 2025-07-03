@@ -10,20 +10,14 @@ import { Bell, MessageCircle, Info, X, AlertTriangle, CheckCircle } from 'lucide
 const NotificationHub: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
   const [mounted, setMounted] = useState(false);
-  const { triggerAnimation } = useGameActions();
-  const { animationState } = useGameStore();
-  const { reducedMotion } = animationState.animationSettings;
+  const reducedMotion = false; // Simplifié
   
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
 
-  useEffect(() => {
-    if (notifications.length > 0) {
-      triggerAnimation('notification-new');
-    }
-  }, [notifications.length, triggerAnimation]);
+  // Simplifié - plus de triggerAnimation
 
   if (!mounted) return null;
 

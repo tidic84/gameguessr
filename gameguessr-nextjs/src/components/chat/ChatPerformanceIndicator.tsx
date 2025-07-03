@@ -2,10 +2,8 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { BarChart3, Clock, Database, Zap } from 'lucide-react';
-import { ChatPerformanceStats } from '@/store/gameStore';
-
 interface ChatPerformanceIndicatorProps {
-  stats: ChatPerformanceStats | null;
+  stats: any | null;
   isVisible: boolean;
   className?: string;
 }

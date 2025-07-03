@@ -94,6 +94,12 @@ export const useSocket = () => {
       },
       submitGuess: (roomCode: string, location: [number, number]) => {
         socketRef.current?.emit('submit guess', roomCode, location);
+      },
+      resetGame: (roomCode: string) => {
+        socketRef.current?.emit('reset game', roomCode);
+      },
+      nextImage: (roomCode: string) => {
+        socketRef.current?.emit('next image', roomCode);
       }
     }
   };

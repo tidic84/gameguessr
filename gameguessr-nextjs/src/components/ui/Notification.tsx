@@ -4,7 +4,7 @@ import { MessageCircle, Bell, X } from 'lucide-react';
 
 interface NotificationProps {
   isVisible: boolean;
-  type: 'message' | 'system' | 'game';
+  type: 'message' | 'system' | 'game' | 'error' | 'success';
   title: string;
   content: string;
   onClose: () => void;
@@ -37,6 +37,10 @@ const Notification: React.FC<NotificationProps> = ({
         return 'bg-blue-500 border-blue-400';
       case 'game':
         return 'bg-green-500 border-green-400';
+      case 'error':
+        return 'bg-red-500 border-red-400';
+      case 'success':
+        return 'bg-emerald-500 border-emerald-400';
       case 'message':
       default:
         return 'bg-purple-500 border-purple-400';

@@ -33,7 +33,7 @@ export interface RoomSlice {
   rooms: Record<string, Room>;
   setCurrentRoom: (room: Room | null) => void;
   updateCurrentRoom: (updates: Partial<Room>) => void;
-  updateRoomUsers: (roomCode: string, users: Record<string, any>) => void;
+  updateRoomUsers: (roomCode: string, users: User[]) => void;
   setRooms: (rooms: Record<string, Room>) => void;
   updateRoom: (roomCode: string, room: Room) => void;
 }
@@ -47,15 +47,13 @@ export const createRoomSlice: StateCreator<
   currentRoom: null,
   rooms: {},
   
-  setCurrentRoom: (room) => set({ currentRoom: room }, false, 'setCurrentRoom'),
+  setCurrentRoom: (room) => set({ currentRoom: room }),
   
   updateCurrentRoom: (updates) =>
     set(
       (state) => ({
         currentRoom: state.currentRoom ? { ...state.currentRoom, ...updates } : null,
-      }),
-      false,
-      'updateCurrentRoom'
+      })
     ),
 
   updateRoomUsers: (roomCode, users) =>
@@ -67,20 +65,16 @@ export const createRoomSlice: StateCreator<
           };
         }
         return state;
-      },
-      false,
-      'updateRoomUsers'
+      }
     ),
 
-  setRooms: (rooms) => set({ rooms }, false, 'setRooms'),
+  setRooms: (rooms) => set({ rooms }),
   
   updateRoom: (roomCode, room) =>
     set(
       (state) => ({
         rooms: { ...state.rooms, [roomCode]: room },
-      }),
-      false,
-      'updateRoom'
+      })
     ),
 });
 
@@ -120,8 +114,7 @@ export const createChatSlice: StateCreator<
           },
         };
       },
-      false,
-      'addChatMessage'
+
     ),
 
   clearChatMessages: (roomCode) =>
@@ -129,8 +122,7 @@ export const createChatSlice: StateCreator<
       (state) => ({
         chatMessages: { ...state.chatMessages, [roomCode]: [] },
       }),
-      false,
-      'clearChatMessages'
+
     ),
 
   // Batch pour optimiser les re-renders
@@ -145,8 +137,7 @@ export const createChatSlice: StateCreator<
           },
         };
       },
-      false,
-      'batchAddChatMessages'
+
     ),
 });
 
@@ -191,15 +182,14 @@ export const createGameSlice: StateCreator<
       (state) => ({
         gameEvents: [...state.gameEvents, event],
       }),
-      false,
-      'addGameEvent'
+
     ),
 
-  setCurrentImageIndex: (index) => set({ currentImageIndex: index }, false, 'setCurrentImageIndex'),
+  setCurrentImageIndex: (index) => set({ currentImageIndex: index }),
 
-  setTimeLeft: (time) => set({ timeLeft: time }, false, 'setTimeLeft'),
+  setTimeLeft: (time) => set({ timeLeft: time }),
 
-  setGameActive: (active) => set({ isGameActive: active }, false, 'setGameActive'),
+  setGameActive: (active) => set({ isGameActive: active }),
 
   updateGameState: (roomCode, gameState, imageIndex) =>
     set(
@@ -215,8 +205,7 @@ export const createGameSlice: StateCreator<
         }
         return state;
       },
-      false,
-      'updateGameState'
+
     ),
 
   // Action batch pour réduire les re-renders
@@ -226,8 +215,7 @@ export const createGameSlice: StateCreator<
         ...state,
         ...updates,
       }),
-      false,
-      'batchUpdateGameState'
+
     ),
 });
 
@@ -245,5 +233,5 @@ export const createConnectionSlice: StateCreator<
 > = (set) => ({
   isConnected: false,
   
-  setConnected: (connected) => set({ isConnected: connected }, false, 'setConnected'),
+  setConnected: (connected) => set({ isConnected: connected }),
 });

@@ -55,7 +55,7 @@ const StateMessage = ({ state }: { state: GameState }) => {
 export default function GameStateTransition({ children, state, className = '' }: GameStateTransitionProps) {
   const [showTransition, setShowTransition] = useState(false);
   const [prevState, setPrevState] = useState<GameState | null>(null);
-  const { isGameActive } = useGameStore();
+  // Simplifié - isGameActive n'existe pas dans le store
 
   // Effet pour gérer les changements d'état
   useEffect(() => {
@@ -72,6 +72,7 @@ export default function GameStateTransition({ children, state, className = '' }:
       
       return () => clearTimeout(timer);
     }
+    return () => {}; // Return une fonction vide si pas de changement d'état
   }, [state, prevState]);
 
   return (

@@ -8,11 +8,16 @@ import { join } from 'path';
 import type { 
   ServerToClientEvents, 
   ClientToServerEvents, 
-  User, 
-  Room,
+  ServerUser, 
+  RoomUser,
+  ServerRoom,
   GameData,
   GameState 
 } from './src/types';
+
+// Alias pour la compatibilité
+type User = ServerUser;
+type Room = ServerRoom;
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -75,7 +80,7 @@ function startRoomTimer(roomCode: string, duration: number, io: SocketIOServer) 
           
           // Redémarrer le timer pour l'image suivante
           setTimeout(() => {
-            startRoomTimer(roomCode, room.duration, io);
+            startRoomTimer(roomCode, room.duration || 60, io);
           }, 3000); // 3 secondes de pause entre les images
           
         } else {
@@ -120,12 +125,7 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
-  const io = new SocketIOServer(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
-  });
+  const io = new SocketIOServer(server);
 
   io.on('connection', (socket) => {
     console.log('Nouvel utilisateur connecté:', socket.id);
@@ -160,9 +160,11 @@ app.prepare().then(() => {
     socket.on('user create', (userId: string, username: string) => {
       users[userId] = {
         id: userId,
-        name: username,
+        username: username,
         socketId: socket.id,
-        points: 0
+        score: 0,
+        status: 'active',
+        isAuthenticated: true
       };
       console.log('Utilisateur créé:', users[userId]);
       socket.emit('user', users[userId]);
@@ -178,9 +180,13 @@ app.prepare().then(() => {
         difficulty: roomData.difficulty,
         duration: roomData.duration,
         privacy: roomData.privacy,
-        gameState: 'wait',
+        gameState: 'waiting',
         gameDB: [],
-        users: {}
+        users: {},
+        status: 'waiting',
+        currentRound: 0,
+        maxRounds: 5,
+        timeLimit: roomData.duration || 60
       };
       
       rooms[roomData.code] = room;
@@ -197,14 +203,13 @@ app.prepare().then(() => {
         socket.join(roomCode);
         
         room.users[userId] = {
-          name: user.name,
-          points: user.points,
-          role: room.owner === userId ? 'admin' : 'player',
-          status: true,
-          alive: true
+          ...user,
+          isAdmin: room.owner === userId,
+          alive: true,
+          gameStatus: false
         };
         
-        console.log(`${user.name} a rejoint ${roomCode}`);
+        console.log(`${user.username} a rejoint ${roomCode}`);
         io.emit('room update', roomCode, room);
         io.emit('player update', roomCode, room.users);
         io.emit('chat join', userId, roomCode);
@@ -224,7 +229,7 @@ app.prepare().then(() => {
         roomImageIndex[roomCode] = 0;
         
         // Démarrer le timer pour cette room
-        startRoomTimer(roomCode, room.duration, io);
+        startRoomTimer(roomCode, room.duration || 60, io);
         
         io.emit('game start', roomCode);
         io.emit('game update', roomCode, room, room.gameState);
@@ -241,7 +246,7 @@ app.prepare().then(() => {
       mode: 'name' | 'map',
       gameState: GameState,
       roomGameDB: GameData[],
-      points: number
+      score: number
     ) => {
       const room = rooms[roomCode];
       const roomUser = room?.users[userId];
@@ -249,14 +254,14 @@ app.prepare().then(() => {
       if (!room || !roomUser) return;
 
       if (mode === 'name') {
-        if (correct && !roomUser.status) {
-          roomUser.points += 100;
-          roomUser.status = true;
+        if (correct && !roomUser.gameStatus) {
+          roomUser.score += 100;
+          roomUser.gameStatus = true;
           io.emit('player update', roomCode, room.users);
         }
       } else if (mode === 'map') {
-        if (correct && roomUser.status) {
-          roomUser.points += points;
+        if (correct && roomUser.gameStatus) {
+          roomUser.score += score;
           io.emit('player update', roomCode, room.users);
         }
       }
@@ -281,7 +286,7 @@ app.prepare().then(() => {
           
           // Redémarrer le timer pour l'image suivante
           setTimeout(() => {
-            startRoomTimer(roomCode, room.duration, io);
+            startRoomTimer(roomCode, room.duration || 60, io);
           }, 1000); // 1 seconde de pause
           
         } else {
@@ -299,7 +304,7 @@ app.prepare().then(() => {
     socket.on('game reset', (roomCode: string) => {
       const room = rooms[roomCode];
       if (room) {
-        room.gameState = 'wait';
+        room.gameState = 'waiting';
         room.gameDB = [];
         
         // Arrêter le timer
@@ -307,8 +312,8 @@ app.prepare().then(() => {
         
         // Réinitialiser les scores
         Object.values(room.users).forEach(user => {
-          user.points = 0;
-          user.status = true;
+          user.score = 0;
+          user.gameStatus = false;
           user.alive = true;
         });
         
@@ -330,8 +335,8 @@ app.prepare().then(() => {
       const user = users[userId];
       
       if (room && user) {
-        console.log(`Message de ${user.name} dans ${roomCode}: ${message}`);
-        io.to(roomCode).emit('chat message', roomCode, user.name, message);
+        console.log(`Message de ${user.username} dans ${roomCode}: ${message}`);
+        io.to(roomCode).emit('chat message', roomCode, user.username, message);
       }
     });
 
